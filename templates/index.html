@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- HERO -->
+<section class="concession-section">
+    <img src="{{ url_for('static', filename='concession.png') }}" alt="Concession" class="concession-img">
+    <div class="concession-overlay">
+        <h1 class="hero-title">L'excellence automobile, à portée de main.</h1>
+        <p class="hero-sub">Découvrez notre sélection de véhicules d'exception.</p>
+    </div>
+</section>
+
+<!-- NOUVEAUTÉS -->
+<section class="cars-section">
+    <div class="nouveautes-header animate-in">
+        <h2 class="section-title">Dernières arrivées</h2>
+        <p class="nouveautes-sub">
+            Notre showroom s'enrichit en permanence des pièces les plus convoitées du marché.<br>
+            Ces véhicules d'exception viennent tout juste d'intégrer notre collection — ne tardez pas.
+        </p>
+    </div>
+
+    <div class="nouveautes-grid">
+        {% for car in cars %}
+        <div class="car-card animate-in" onclick="window.location.href='/car/{{ car.id }}'">
+            <div class="car-img">
+                <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
+                <span class="car-type-badge" style="background:
+                    {% if car.type == 'SUV' %}#2F6B4A
+                    {% elif car.type == 'Sportive' %}#A63A3A
+                    {% elif car.type == 'Berline' %}#2F4A6B
+                    {% elif car.type == 'Coupé' %}#6B4A2F
+                    {% else %}#555{% endif %}
+                ">{{ car.type }}</span>
+            </div>
+            <div class="car-card-body">
+                <h3 class="car-title">{{ car.brand }} {{ car.model }}</h3>
+                <p class="car-version">{{ car.modelVersion or "" }}</p>
+                <div class="car-card-specs">
+                    <span class="car-spec-pill">⚡ {{ car.hp }} ch</span>
+                    <span class="car-spec-pill">{{ car.fuel }}</span>
+                    <span class="car-spec-pill">{{ car.year }}</span>
+                </div>
+                <div class="car-card-footer">
+                    <span class="car-price-tag">{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</span>
+                    <span class="car-card-cta">Voir →</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="nouveautes-cta animate-in">
+        <a href="{{ url_for('catalogue') }}" class="btn-catalogue">Voir tout le catalogue</a>
+    </div>
+</section>
+
+<!-- TEXTE OTOMA -->
+<section class="otoma-pitch">
+    <div class="otoma-pitch-inner animate-in">
+        <p class="otoma-pitch-label">Pourquoi OTOMA</p>
+        <h2 class="otoma-pitch-title">Une autre façon d'acheter une voiture d'exception.</h2>
+        <p class="otoma-pitch-text">
+            Chez OTOMA, nous avons fait le choix de la qualité sur la quantité. Chaque véhicule que nous proposons
+            a été sélectionné, inspecté et validé par notre équipe — parce qu'une voiture de prestige ne mérite
+            pas moins qu'une attention absolue. Depuis Chartres, nous accompagnons des passionnés à travers toute
+            la France dans l'acquisition de véhicules qui les font vibrer.
+        </p>
+        <p class="otoma-pitch-text">
+            Que vous recherchiez une sportive pour le plaisir, un SUV de luxe pour le quotidien ou une pièce rare
+            pour compléter votre collection, notre équipe est à votre écoute — sans pression, sans compromis,
+            avec une seule priorité : vous.
+        </p>
+        <a href="{{ url_for('about') }}" class="otoma-pitch-link">En savoir plus sur OTOMA →</a>
+    </div>
+</section>
+
+<!-- AVIS CLIENTS -->
+<section class="reviews">
+    <h2 class="section-title animate-in">Retours clients</h2>
+    <p class="reviews-sub animate-in">Ce que nos clients disent de leur expérience OTOMA</p>
+    <div class="reviews-grid">
+        <div class="review-card animate-in">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"J'ai été accompagné par Thomas tout au long de l'achat de ma Lamborghini Urus. Professionnalisme et conseils personnalisés. Je recommande vivement OTOMA."</p>
+            <div class="review-footer">
+                <div class="review-avatar">J</div>
+                <div>
+                    <p class="review-author">Julien P.</p>
+                    <p class="review-vehicle">Lamborghini Urus — 2021</p>
+                </div>
+            </div>
+        </div>
+        <div class="review-card animate-in">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"Grâce à OTOMA, j'ai pu trouver exactement la Ferrari F8 que je cherchais. Service impeccable et suivi parfait du début à la fin."</p>
+            <div class="review-footer">
+                <div class="review-avatar">S</div>
+                <div>
+                    <p class="review-author">Sophie R.</p>
+                    <p class="review-vehicle">Ferrari F8 Tributo — 2022</p>
+                </div>
+            </div>
+        </div>
+        <div class="review-card animate-in">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-text">"L'équipe est très réactive et à l'écoute. J'ai acheté ma Porsche 911 et tout s'est déroulé sans aucun problème. Une expérience vraiment premium."</p>
+            <div class="review-footer">
+                <div class="review-avatar">A</div>
+                <div>
+                    <p class="review-author">Antoine M.</p>
+                    <p class="review-vehicle">Porsche 911 Turbo S — 2022</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

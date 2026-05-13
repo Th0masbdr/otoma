@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="sell-hero">
+    <h1 class="sell-title">Vendez votre véhicule en toute simplicité</h1>
+    <p class="sell-subtitle">Expertise, transparence, estimation grâce à votre plaque.</p>
+</section>
+
+<section class="sell-form-section">
+    <form id="sellForm" class="sell-form">
+
+        <!-- Plaque d'immatriculation -->
+        <label>Votre plaque d'immatriculation</label>
+        <input type="text" id="plate" placeholder="AB-123-CD" required>
+        <button type="button" id="checkPlateBtn" class="sell-btn">Rechercher</button>
+
+        <!-- Conteneur infos véhicule (rempli après recherche) -->
+        <div id="vehicleInfo" style="display:none; margin-top:20px;">
+            <h3>Informations du véhicule</h3>
+            <p><strong>Marque :</strong> <span id="infoBrand"></span></p>
+            <p><strong>Modèle :</strong> <span id="infoModel"></span></p>
+            <p><strong>Année :</strong> <span id="infoYear"></span></p>
+            <p><strong>Carburant :</strong> <span id="infoFuel"></span></p>
+            <p><strong>Couleur :</strong> <span id="infoColor"></span></p>
+            <p><strong>Puissance :</strong> <span id="infoHP"></span> ch</p>
+            <p><strong>Transmission :</strong> <span id="infoTransmission"></span></p>
+
+            <!-- Champs véhicule supplémentaires -->
+            <label>Kilométrage</label>
+            <input type="number" id="km" required>
+
+            <label>Prix souhaité (€)</label>
+            <input type="number" id="price" required>
+
+            <label>Photos du véhicule</label>
+            <input type="file" id="images" multiple>
+
+            <!-- 🆕 Infos personnelles du vendeur à la fin -->
+            <h3 style="margin-top:25px;">Vos coordonnées</h3>
+
+            <label>Adresse e-mail</label>
+            <input type="email" id="email" required placeholder="exemple@mail.com">
+
+            <label>Numéro de téléphone</label>
+            <input type="tel" id="phone" required placeholder="06 12 34 56 78">
+
+            <!-- 🆕 Case obligatoire RGPD -->
+            <div style="margin-top:15px;">
+                <label style="display:inline-flex; align-items:center; gap:10px; white-space:nowrap; cursor:pointer;">
+                    <input type="checkbox" id="consent" required style="width:18px; height:18px;">
+                    <span>J’accepte que OTOMA récupère et stocke mes données</span>
+                </label>
+            </div>
+
+            <button type="submit" class="sell-btn" style="margin-top:20px;">Envoyer la demande</button>
+        </div>
+
+        <p id="sellMessage" class="sell-message"></p>
+    </form>
+</section>
+
+<script>
+// -------------------------------
+// DOM ELEMENTS
+// -------------------------------
+const plateInput = document.getElementById("plate");
+const checkPlateBtn = document.getElementById("checkPlateBtn");
+const vehicleInfo = document.getElementById("vehicleInfo");
+const sellForm = document.getElementById("sellForm");
+
+const infoBrand = document.getElementById("infoBrand");
+const infoModel = document.getElementById("infoModel");
+const infoYear = document.getElementById("infoYear");
+const infoFuel = document.getElementById("infoFuel");
+const infoColor = document.getElementById("infoColor");
+const infoHP = document.getElementById("infoHP");
+const infoTransmission = document.getElementById("infoTransmission");
+
+const sellMessage = document.getElementById("sellMessage");
+
+// -------------------------------
+// CHECK PLATE VIA API
+// -------------------------------
+checkPlateBtn.addEventListener("click", async () => {
+    const plate = plateInput.value.trim().replace(/[-\s]/g, "");
+    if (!plate) {
+        alert("Veuillez entrer une plaque valide.");
+        return;
+    }
+
+    sellMessage.textContent = "Recherche en cours...";
+    try {
+        const res = await fetch(`/api/check_plate?plate=${plate}`);
+        if (!res.ok) throw new Error("Plaque non trouvée.");
+        const data = await res.json();
+
+        // Remplir les infos
+        infoBrand.textContent = data.brand || "-";
+        infoModel.textContent = data.model || "-";
+        infoYear.textContent = data.year || "-";
+        infoFuel.textContent = data.fuel || "-";
+        infoColor.textContent = data.color || "-";
+        infoHP.textContent = data.hp || "-";
+        infoTransmission.textContent = data.transmission || "-";
+
+        vehicleInfo.style.display = "block";
+        sellMessage.textContent = "";
+    } catch (err) {
+        vehicleInfo.style.display = "none";
+        sellMessage.textContent = "Impossible de retrouver le véhicule. Vérifiez votre plaque.";
+    }
+});
+
+// -------------------------------
+// SUBMIT FORM
+// -------------------------------
+sellForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // Vérification de la case RGPD
+    if (!document.getElementById("consent").checked) {
+        sellMessage.textContent = "Vous devez accepter que OTOMA stocke vos données.";
+        sellMessage.style.color = "red";
+        return;
+    }
+
+    sellMessage.style.color = "green";
+    sellMessage.textContent = "Demande envoyée ! Nous vous contacterons rapidement.";
+
+    // Ici tu ajouteras l’envoi réel au backend plus tard
+});
+</script>
+
+{% endblock %}

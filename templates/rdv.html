@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- HERO -->
+<section class="testdrive-hero">
+    <div class="testdrive-hero-overlay"></div>
+    <div class="testdrive-hero-content">
+        <p class="testdrive-hero-label">OTOMA — Service premium</p>
+        <h1 class="testdrive-hero-title">Prenez rendez-vous</h1>
+        <p class="testdrive-hero-sub">Un expert vous accompagne pour votre projet automobile.</p>
+    </div>
+</section>
+
+<!-- FORM SECTION -->
+<section class="testdrive-section">
+
+    <div class="testdrive-card">
+
+        <div class="testdrive-card-header">
+            <div class="testdrive-header-line"></div>
+            <h2 class="testdrive-card-title">Formulaire de prise de rendez-vous</h2>
+            <div class="testdrive-header-line"></div>
+        </div>
+
+        <p class="testdrive-card-sub">
+            Remplissez ce formulaire et notre équipe vous contactera sous 24h pour confirmer votre rendez-vous.
+        </p>
+
+        <!-- Points rassurants -->
+        <div class="testdrive-badges">
+            <span class="testdrive-badge"> Réponse sous 24h</span>
+            <span class="testdrive-badge"> Sans engagement</span>
+            <span class="testdrive-badge"> Conseiller dédié</span>
+        </div>
+
+        <!-- Iframe Tally -->
+        <div class="testdrive-iframe-wrap">
+            <iframe data-tally-src="https://tally.so/embed/xXxeQ9?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&hideBranding=1"
+                    loading="lazy"
+                    width="100%"
+                    height="700"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    title="Prise de rendez-vous"></iframe>
+        </div>
+
+    </div>
+
+    <!-- Bloc confiance bas de page -->
+    <div class="testdrive-trust">
+        <div class="trust-item">
+            <span class="trust-icon">🏆</span>
+            <span>400+ véhicules vendus</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+            <span class="trust-icon">⭐</span>
+            <span>96% de clients satisfaits</span>
+        </div>
+        <div class="trust-divider"></div>
+        <div class="trust-item">
+            <span class="trust-icon">📞</span>
+            <span><a href="tel:0610203040">06 10 20 30 40</a></span>
+        </div>
+    </div>
+
+</section>
+
+<script>
+    document.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((iframe) => {
+        iframe.src = iframe.dataset.tallySrc;
+    });
+</script>
+
+{% endblock %}

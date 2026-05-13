@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendre votre véhicule - OTOMA</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="OTOMA Logo">
+    </div>
+
+    <nav>
+        <a href="/">Accueil</a>
+        <a href="#">Services</a>
+        <a href="#">À propos</a>
+        <a href="/vendre">Vendre votre véhicule</a>
+    </nav>
+
+    <div class="header-contact">
+        <span class="phone">06 10 20 30 40</span>
+        <button class="btn-rdv">Prendre RDV</button>
+    </div>
+</header>
+
+
+<section class="sell-section">
+    <h1>Vendre votre véhicule</h1>
+    <p>Indiquez votre plaque pour retrouver automatiquement les informations de votre véhicule.</p>
+
+    <form id="sellForm" enctype="multipart/form-data">
+
+        <!-- PLAQUE -->
+        <label>Plaque d'immatriculation :</label>
+        <input type="text" id="plate" placeholder="AB-123-CD" required>
+
+        <button type="button" id="checkPlateBtn" class="btn-search">Récupérer les informations</button>
+
+        <!-- RÉSULTATS API -->
+        <div id="vehicleInfo" class="hidden">
+            <h3>Informations détectées :</h3>
+
+            <label>Marque :</label>
+            <input type="text" id="brand" readonly>
+
+            <label>Modèle :</label>
+            <input type="text" id="model" readonly>
+
+            <label>Année :</label>
+            <input type="text" id="year" readonly>
+
+            <label>Carburant :</label>
+            <input type="text" id="fuel" readonly>
+        </div>
+
+        <!-- INFOS MANUELLES -->
+        <label>Kilométrage :</label>
+        <input type="number" id="km" placeholder="Ex : 128000" required>
+
+        <label>Prix souhaité (€) :</label>
+        <input type="number" id="price" placeholder="Ex : 15900" required>
+
+        <!-- UPLOAD -->
+        <label>Photos du véhicule :</label>
+        <input type="file" id="images" multiple accept="image/*" required>
+
+        <button type="submit" class="btn-rdv">Envoyer la demande</button>
+    </form>
+</section>
+
+
+<footer>
+    <a href="#">Cookies</a>
+    <a href="#">Mentions légales</a>
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="OTOMA Logo">
+</footer>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

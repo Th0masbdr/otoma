@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="catalogue-hero">
+    <div class="catalogue-hero-content">
+        <p class="catalogue-hero-label">OTOMA — Collection</p>
+        <h1 class="catalogue-hero-title">Notre Catalogue</h1>
+        <p class="catalogue-hero-sub">Nos véhicules d'exception disponibles</p>
+    </div>
+</section>
+
+<!-- FILTRES -->
+<section class="catalogue-filters-section">
+    <div class="filters-bar">
+        <div class="filter-group">
+            <label class="filter-label">Marque</label>
+            <div class="filter-select-wrap">
+                <select id="brand-filter" class="filter-select">
+                    <option value="">Toutes les marques</option>
+                    {% for b in brands %}
+                    <option value="{{ b }}">{{ b }}</option>
+                    {% endfor %}
+                </select>
+                <span class="filter-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+            </div>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+            <label class="filter-label">Modèle</label>
+            <div class="filter-select-wrap">
+                <select id="model-filter" class="filter-select" disabled>
+                    <option value="">Tous les modèles</option>
+                </select>
+                <span class="filter-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+            </div>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+            <label class="filter-label">Budget</label>
+            <div class="filter-select-wrap">
+                <select id="budget-filter" class="filter-select">
+                    <option value="">Tous les budgets</option>
+                    <option value="low">Moins de 100 000 €</option>
+                    <option value="mid">100 000 € – 1 000 000 €</option>
+                    <option value="high">Plus de 1 000 000 €</option>
+                </select>
+                <span class="filter-arrow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                </span>
+            </div>
+        </div>
+        <button id="search-btn" class="filter-btn">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            Rechercher
+        </button>
+        <button id="reset-btn" class="filter-reset-btn">Réinitialiser</button>
+    </div>
+</section>
+
+<!-- GRILLE VOITURES -->
+<section class="catalogue-section">
+    <p id="results-count" class="results-count"></p>
+    <div id="catalogue-grid" class="catalogue-grid"></div>
+    <p id="no-results" class="no-results" style="display:none;">Aucun véhicule ne correspond à votre recherche.</p>
+</section>
+
+<!-- CONTACT -->
+<section class="catalogue-contact">
+    <div class="catalogue-contact-inner">
+        <h2 class="catalogue-contact-title">Venez nous rendre visite</h2>
+        <p class="catalogue-contact-sub">Notre équipe est disponible 6j/7 pour vous accueillir et vous conseiller.</p>
+
+        <div class="catalogue-contact-grid">
+            <div class="contact-info-block">
+                <p class="contact-info-label">Adresse</p>
+                <p class="contact-info-value" id="contact-address">CCI de Chartres — Place des Halles, 28000 Chartres</p>
+                <button class="contact-copy-btn" onclick="copyAddress()">Copier l'adresse</button>
+            </div>
+            <div class="contact-info-block">
+                <p class="contact-info-label">Téléphone</p>
+                <p class="contact-info-value"><a href="tel:0610203040">06 10 20 30 40</a></p>
+            </div>
+            <div class="contact-info-block">
+                <p class="contact-info-label">Email</p>
+                <p class="contact-info-value"><a href="mailto:contact@otoma.fr">contact@otoma.fr</a></p>
+            </div>
+        </div>
+
+        <!-- Google Maps embed -->
+        <div class="catalogue-map">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2641.2!2d1.4880!3d48.4469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e4065e2b93a8b7%3A0x4d9b2e3e2b3e2b3e!2sCCI%20Chartres!5e0!3m2!1sfr!2sfr!4v1"
+                width="100%"
+                height="300"
+                style="border:0; border-radius:12px;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            <p class="map-fallback">
+                Impossible d'afficher la carte ?
+                <a href="https://maps.google.com/?q=CCI+Chartres+Place+des+Halles+28000+Chartres" target="_blank">Ouvrir dans Google Maps</a>
+            </p>
+        </div>
+    </div>
+</section>
+
+<script id="carsJson" type="application/json">{{ cars | tojson }}</script>
+<script src="/static/catalogue.js"></script>
+
+<script>
+function copyAddress() {
+    navigator.clipboard.writeText("CCI de Chartres — Place des Halles, 28000 Chartres");
+    const btn = document.querySelector('.contact-copy-btn');
+    btn.textContent = "Copié !";
+    setTimeout(() => btn.textContent = "Copier l'adresse", 2000);
+}
+</script>
+
+{% endblock %}

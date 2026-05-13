@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="reservation-hero">
+    <div class="reservation-hero-content">
+        <p class="reservation-hero-label">OTOMA — Réservation</p>
+        <h1 class="reservation-hero-title">Réservez votre véhicule</h1>
+        <p class="reservation-hero-sub">{{ car.brand }} {{ car.model }} — {{ car.modelVersion }}</p>
+    </div>
+</section>
+
+<section class="reservation-body">
+    <div class="reservation-summary">
+        <div class="reservation-car-img">
+            <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}">
+        </div>
+        <div class="reservation-car-info">
+            <h2>{{ car.brand }} {{ car.model }}</h2>
+            <p class="reservation-car-version">{{ car.modelVersion }} — {{ car.year }}</p>
+            <p class="reservation-car-price">Prix : <strong>{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</strong></p>
+            <div class="reservation-deposit-box">
+                <p class="deposit-label">Caution de réservation (5%)</p>
+                <p class="deposit-amount">{{ "{:,.0f}".format(deposit).replace(",", " ") }} €</p>
+                <p class="deposit-note">Cette caution est entièrement déduite du prix final lors de l'achat. Elle vous garantit la réservation exclusive du véhicule à votre nom.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORMULAIRE PAIEMENT -->
+    <div class="reservation-form-card" id="payment-form-section">
+        <h2 class="reservation-form-title">Vos informations</h2>
+        <p class="reservation-form-sub">Toutes vos données sont transmises de manière sécurisée et ne seront jamais partagées à des tiers.</p>
+
+        <div class="reservation-conditions">
+            <h3>Conditions de réservation</h3>
+            <ul>
+                <li>La caution de {{ "{:,.0f}".format(deposit).replace(",", " ") }} € correspond à 5% du prix du véhicule.</li>
+                <li>Elle est intégralement déduite du montant total lors de la finalisation de l'achat.</li>
+                <li>En cas d'annulation de votre part sous 48h, la caution est intégralement remboursée.</li>
+                <li>Au-delà de 48h, la caution peut être conservée à titre de compensation.</li>
+                <li>Le véhicule est réservé exclusivement à votre nom dès confirmation du paiement.</li>
+            </ul>
+        </div>
+
+        <form id="reservationForm" class="reservation-form" onsubmit="return false;">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" id="firstName" placeholder="Jean" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="lastName" placeholder="Dupont" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Adresse e-mail</label>
+                <input type="email" id="email" placeholder="jean.dupont@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Numéro de téléphone</label>
+                <input type="tel" id="phone" placeholder="06 12 34 56 78" required>
+            </div>
+
+            <div class="form-group">
+                <label>Adresse postale</label>
+                <input type="text" id="address" placeholder="12 rue de la Paix" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Code postal</label>
+                    <input type="text" id="zip" placeholder="75001" required>
+                </div>
+                <div class="form-group">
+                    <label>Ville</label>
+                    <input type="text" id="city" placeholder="Paris" required>
+                </div>
+            </div>
+
+            <div class="form-separator">
+                <span>Informations bancaires</span>
+            </div>
+
+            <div class="form-group">
+                <label>Numéro de carte</label>
+                <div class="card-input-wrap">
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                    <span class="card-icons">💳</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date d'expiration</label>
+                    <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
+                </div>
+                <div class="form-group">
+                    <label>CVV</label>
+                    <input type="text" id="cardCvv" placeholder="123" maxlength="3" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Nom sur la carte</label>
+                <input type="text" id="cardName" placeholder="JEAN DUPONT" required>
+            </div>
+
+            <div class="form-consent">
+                <label>
+                    <input type="checkbox" id="consent" required>
+                    <span>J'accepte les conditions de réservation et autorise le prélèvement de la caution de <strong>{{ "{:,.0f}".format(deposit).replace(",", " ") }} €</strong>.</span>
+                </label>
+            </div>
+
+            <button type="button" class="reservation-submit-btn" onclick="submitReservation()">
+                Confirmer la réservation — {{ "{:,.0f}".format(deposit).replace(",", " ") }} €
+            </button>
+
+            <p class="reservation-secure-note">
+                🔒 Paiement simulé — Aucune donnée réelle n'est transmise ni stockée. Site réalisé dans le cadre d'un projet de diplôme.
+            </p>
+
+        </form>
+    </div>
+
+    <!-- LOADING -->
+    <div class="reservation-loading" id="payment-loading" style="display:none;">
+        <div class="loading-spinner"></div>
+        <p class="loading-title">Connexion à votre banque en cours</p>
+        <p class="loading-sub">Veuillez patienter, ne fermez pas cette page...</p>
+    </div>
+
+    <!-- CONFIRMATION -->
+    <div class="reservation-confirmation" id="payment-confirmation" style="display:none;">
+        <div class="confirmation-icon">✓</div>
+        <h2 class="confirmation-title">Paiement confirmé</h2>
+        <p class="confirmation-text">
+            Votre caution de <strong>{{ "{:,.0f}".format(deposit).replace(",", " ") }} €</strong> a bien été enregistrée.<br>
+            Le <strong>{{ car.brand }} {{ car.model }}</strong> est désormais réservé à votre nom.
+        </p>
+        <p class="confirmation-text">Un récapitulatif vous a été envoyé par e-mail. Notre équipe vous contactera dans les 24h pour finaliser votre acquisition.</p>
+        <a href="{{ url_for('rdv') }}" class="confirmation-btn">Prendre contact avec notre équipe</a>
+    </div>
+
+</section>
+
+<script>
+// Format carte
+document.getElementById('cardNumber')?.addEventListener('input', function() {
+    let v = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+    let matches = v.match(/\d{4,16}/g);
+    let match = matches && matches[0] || '';
+    let parts = [];
+    for (let i=0, len=match.length; i<len; i+=4) { parts.push(match.substring(i, i+4)); }
+    this.value = parts.length ? parts.join(' ') : v;
+});
+
+document.getElementById('cardExpiry')?.addEventListener('input', function() {
+    let v = this.value.replace(/\D/g, '');
+    if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
+    this.value = v;
+});
+
+function submitReservation() {
+    const fields = ['firstName','lastName','email','phone','address','zip','city','cardNumber','cardExpiry','cardCvv','cardName','consent'];
+    for (let id of fields) {
+        const el = document.getElementById(id);
+        if (el && !el.value && el.type !== 'checkbox') { el.focus(); return; }
+        if (el && el.type === 'checkbox' && !el.checked) { alert("Veuillez accepter les conditions de réservation."); return; }
+    }
+
+    document.getElementById('payment-form-section').style.display = 'none';
+    document.getElementById('payment-loading').style.display = 'flex';
+
+    setTimeout(() => {
+        document.getElementById('payment-loading').style.display = 'none';
+        document.getElementById('payment-confirmation').style.display = 'flex';
+    }, 4000);
+}
+</script>
+
+{% endblock %}

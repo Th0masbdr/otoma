@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="page-section" style="display:flex; flex-direction:column; justify-content:center; align-items:center; min-height:80vh;">
+    
+    <h1 class="page-title" style="text-align:center; margin-bottom:2em;">Espace Admin</h1>
+
+    <!-- Étape 1 : Code d'accès -->
+    <div id="loginSection" style="text-align:center; max-width:500px;">
+        <label for="adminCode">Entrez le code d'administration :</label>
+        <input type="password" id="adminCode" placeholder="Code admin">
+        <button id="loginBtn" class="sell-btn" style="margin-top:15px;">Se connecter</button>
+        <p id="loginMessage" style="color:red; margin-top:10px;"></p>
+    </div>
+
+    <!-- Étape 2 : Liste des ventes (après authentification) -->
+    <div id="adminPanel" style="display:none; max-width:900px; margin-top:30px; text-align:left; width:100%;">
+        <h2>Demandes de vente reçues</h2>
+        <div id="sellDataList">
+            <!-- Les demandes seront ajoutées ici -->
+        </div>
+    </div>
+
+</section>
+
+<script>
+// -------------------------------
+// ADMIN LOGIN
+// -------------------------------
+const loginBtn = document.getElementById("loginBtn");
+const adminCodeInput = document.getElementById("adminCode");
+const loginMessage = document.getElementById("loginMessage");
+const loginSection = document.getElementById("loginSection");
+const adminPanel = document.getElementById("adminPanel");
+
+loginBtn.addEventListener("click", () => {
+    const code = adminCodeInput.value.trim();
+    if(code === "admin123") {
+        loginSection.style.display = "none";
+        adminPanel.style.display = "block";
+        displaySellData();
+    } else {
+        loginMessage.textContent = "Code incorrect !";
+    }
+});
+
+// -------------------------------
+// RÉCUPÉRER LES DONNÉES DE sell.html
+// -------------------------------
+// Pour ce prototype, on simule un stockage local avec localStorage
+function displaySellData() {
+    const data = JSON.parse(localStorage.getItem("sellData") || "[]");
+    const container = document.getElementById("sellDataList");
+    container.innerHTML = "";
+
+    if(data.length === 0) {
+        container.innerHTML = "<p>Aucune demande de vente pour le moment.</p>";
+        return;
+    }
+
+    data.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.style.border = "1px solid #ccc";
+        div.style.padding = "15px";
+        div.style.borderRadius = "10px";
+        div.style.marginBottom = "15px";
+        div.innerHTML = `
+            <p><strong>#${index+1} - Plaque :</strong> ${item.plate}</p>
+            <p><strong>Marque :</strong> ${item.brand}</p>
+            <p><strong>Modèle :</strong> ${item.model}</p>
+            <p><strong>Année :</strong> ${item.year}</p>
+            <p><strong>Carburant :</strong> ${item.fuel}</p>
+            <p><strong>Couleur :</strong> ${item.color}</p>
+            <p><strong>Puissance :</strong> ${item.hp} ch</p>
+            <p><strong>Transmission :</strong> ${item.transmission}</p>
+            <p><strong>Kilométrage :</strong> ${item.km} km</p>
+            <p><strong>Prix souhaité :</strong> ${item.price} €</p>
+            <p><strong>Email :</strong> ${item.email}</p>
+            <p><strong>Téléphone :</strong> ${item.phone}</p>
+        `;
+        container.appendChild(div);
+    });
+}
+</script>
+
+{% endblock %}
