@@ -8,8 +8,17 @@
      Filtering is handled client-side by catalogue.js
      ============================================================ -->
 
-<!-- Hero banner with dark gradient background -->
+<!-- Hero banner with aerial parking lot photo as background -->
 <section class="catalogue-hero">
+    <!-- Background image with brightness overlay -->
+    <div class="catalogue-hero-bg" style="
+        background-image: url('/static/photo_parking.png');
+        background-size: cover;
+        background-position: center;
+        position: absolute;
+        inset: 0;
+        filter: brightness(0.45);
+    "></div>
     <div class="catalogue-hero-content">
         <p class="catalogue-hero-label">OTOMA — Collection</p>
         <h1 class="catalogue-hero-title">Notre Catalogue</h1>
@@ -146,7 +155,7 @@
         </div>
 
         <!-- Google Maps embed pointing to CCI Chartres
-             Falls back to a direct Google Maps link if the iframe fails to load -->
+             Falls back to a direct Google Maps link if iframe fails -->
         <div class="catalogue-map">
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2641.2!2d1.4880!3d48.4469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e4065e2b93a8b7%3A0x4d9b2e3e2b3e2b3e!2sCCI%20Chartres!5e0!3m2!1sfr!2sfr!4v1"
@@ -168,7 +177,7 @@
 </section>
 
 <!-- ============================================================
-     VEHICLE DATA & SCRIPTS
+     VEHICLE DATA AND SCRIPTS
      ============================================================ -->
 
 <!-- All vehicle data serialized as JSON and injected into the page

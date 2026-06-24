@@ -9,10 +9,8 @@
 
 <section class="detail-body">
 
-    <!-- LEFT COLUMN — Vehicle photo and mobile CTA -->
+    <!-- LEFT COLUMN — Vehicle photo -->
     <div class="detail-left">
-
-        <!-- Main vehicle image with shine hover effect -->
         <div class="detail-main-img-wrap">
             <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" class="detail-main-img">
             <!-- Decorative shine overlay animated on hover -->
@@ -38,61 +36,47 @@
         <!-- Vehicle price formatted with spaces as thousands separator -->
         <p class="detail-price-main">{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</p>
 
-        <!-- Technical specifications grid -->
+        <!-- ============================================================
+             SPECS GRID
+             Two-column layout with label on top and value below
+             No emojis — clean typographic approach
+             ============================================================ -->
         <div class="detail-specs">
 
             <!-- Horsepower -->
             <div class="spec-item">
-                <div class="spec-icon">⚡</div>
-                <div class="spec-data">
-                    <span class="spec-label">Puissance</span>
-                    <span class="spec-value">{{ car.hp }} ch</span>
-                </div>
+                <span class="spec-label">Puissance</span>
+                <span class="spec-value">{{ car.hp }} ch</span>
             </div>
 
-            <!-- Mileage formatted with spaces as thousands separator -->
+            <!-- Mileage -->
             <div class="spec-item">
-                <div class="spec-icon">🛣️</div>
-                <div class="spec-data">
-                    <span class="spec-label">Kilométrage</span>
-                    <span class="spec-value">{{ "{:,.0f}".format(car.km).replace(",", " ") }} km</span>
-                </div>
+                <span class="spec-label">Kilométrage</span>
+                <span class="spec-value">{{ "{:,.0f}".format(car.km).replace(",", " ") }} km</span>
             </div>
 
             <!-- Fuel type -->
             <div class="spec-item">
-                <div class="spec-icon">⛽</div>
-                <div class="spec-data">
-                    <span class="spec-label">Carburant</span>
-                    <span class="spec-value">{{ car.fuel }}</span>
-                </div>
+                <span class="spec-label">Carburant</span>
+                <span class="spec-value">{{ car.fuel }}</span>
             </div>
 
             <!-- Transmission type -->
             <div class="spec-item">
-                <div class="spec-icon">⚙️</div>
-                <div class="spec-data">
-                    <span class="spec-label">Transmission</span>
-                    <span class="spec-value">{{ car.transmission }}</span>
-                </div>
+                <span class="spec-label">Transmission</span>
+                <span class="spec-value">{{ car.transmission }}</span>
             </div>
 
             <!-- Exterior color -->
             <div class="spec-item">
-                <div class="spec-icon">🎨</div>
-                <div class="spec-data">
-                    <span class="spec-label">Couleur</span>
-                    <span class="spec-value">{{ car.color }}</span>
-                </div>
+                <span class="spec-label">Couleur</span>
+                <span class="spec-value">{{ car.color }}</span>
             </div>
 
             <!-- Model version — displays a dash if not available -->
             <div class="spec-item">
-                <div class="spec-icon">📋</div>
-                <div class="spec-data">
-                    <span class="spec-label">Version</span>
-                    <span class="spec-value">{{ car.modelVersion or "—" }}</span>
-                </div>
+                <span class="spec-label">Version</span>
+                <span class="spec-value">{{ car.modelVersion or "—" }}</span>
             </div>
 
         </div>
@@ -102,10 +86,10 @@
 
         <!-- Trust indicators / selling points -->
         <ul class="detail-selling-points">
-            <li>✅ Véhicule inspecté et certifié OTOMA</li>
-            <li>✅ Historique complet disponible</li>
-            <li>✅ Financement sur mesure possible</li>
-            <li>✅ Livraison partout en Europe</li>
+            <li>Véhicule inspecté et certifié OTOMA</li>
+            <li>Historique complet disponible</li>
+            <li>Financement sur mesure possible</li>
+            <li>Livraison partout en Europe</li>
         </ul>
 
         <!-- Test drive button — visible on desktop only -->
@@ -114,8 +98,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
 
-        <!-- Reservation button with 5% deposit amount
-             Deposit is calculated in the Flask route and formatted here -->
+        <!-- Reservation button with 5% deposit amount -->
         <a href="/reservation/{{ car.id }}" class="detail-cta-caution">
             Réserver ce véhicule — Caution {{ "{:,.0f}".format((car.price * 0.05) | int).replace(",", " ") }} €
         </a>

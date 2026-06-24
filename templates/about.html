@@ -4,6 +4,7 @@
 <!-- ============================================================
      ABOUT PAGE
      Presents OTOMA's history, values, services and location
+     Includes a night parking photo embedded inside the content card
      Static content — no data passed from Flask
      ============================================================ -->
 
@@ -72,11 +73,21 @@
 
         <!-- Section — showroom location and opening conditions -->
         <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:12px; margin-top:36px;">Où nous trouver</h2>
-        <p style="margin-bottom:8px;">
+        <p style="margin-bottom:28px;">
             Notre showroom est situé à Chartres, en Eure-et-Loir, facilement accessible depuis l'Île-de-France
             et le Centre-Val de Loire. Nous vous accueillons sur rendez-vous, six jours sur sept, dans un cadre
             pensé pour que la découverte de nos véhicules soit, en elle-même, une expérience.
         </p>
+
+        <!-- Night parking photo — full width inside the content card
+             Placed before the closing quote to break up the text
+             and give a visual impression of the dealership at night -->
+        <div style="margin: 36px 0; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.15);">
+            <img
+                src="{{ url_for('static', filename='photo_parkingnuit.png') }}"
+                alt="Parking OTOMA de nuit"
+                style="width:100%; height:320px; object-fit:cover; display:block;">
+        </div>
 
         <!-- Closing quote — call to action styled as a highlighted blockquote -->
         <p style="margin-top:36px; padding:22px 28px; background:var(--cream); border-left:4px solid var(--red); border-radius:8px; font-style:italic; line-height:1.8;">

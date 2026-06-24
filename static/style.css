@@ -816,6 +816,7 @@ footer {
     align-items: start;
 }
 
+/* Vehicle image container with shine hover effect */
 .detail-main-img-wrap {
     position: relative;
     border-radius: 20px;
@@ -837,6 +838,7 @@ footer {
     transform: scale(1.04);
 }
 
+/* Decorative shine overlay that sweeps across on hover */
 .detail-img-shine {
     position: absolute;
     top: -50%;
@@ -853,6 +855,7 @@ footer {
     left: 130%;
 }
 
+/* Vehicle name and year badge row */
 .detail-title-block {
     display: flex;
     align-items: center;
@@ -868,6 +871,7 @@ footer {
     color: var(--graphite);
 }
 
+/* Year displayed as a pill badge with red border */
 .detail-year-tag {
     background: var(--cream);
     border: 2px solid var(--red);
@@ -879,6 +883,7 @@ footer {
     letter-spacing: 1px;
 }
 
+/* Price in large Playfair Display red */
 .detail-price-main {
     font-family: 'Playfair Display', serif;
     font-size: 2.6rem;
@@ -888,54 +893,53 @@ footer {
     letter-spacing: 1px;
 }
 
+/* ============================================================
+   SPECS GRID
+   Two-column grid — label on top, bold value below
+   No emojis — clean typographic approach with red left border
+   ============================================================ */
 .detail-specs {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 14px;
+    gap: 12px;
     margin-bottom: 30px;
 }
 
 .spec-item {
     display: flex;
-    align-items: center;
-    gap: 14px;
+    flex-direction: column;
+    gap: 4px;
     background: var(--cream);
-    padding: 14px 18px;
-    border-radius: 12px;
+    padding: 16px 20px;
+    border-radius: 10px;
     border-left: 3px solid var(--red);
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .spec-item:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.09);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-.spec-icon {
-    font-size: 1.4rem;
-    flex-shrink: 0;
-}
-
-.spec-data {
-    display: flex;
-    flex-direction: column;
-}
-
+/* Label — small uppercase red text above the value */
 .spec-label {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #888;
-    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: var(--red);
+    font-weight: 700;
 }
 
+/* Value — large bold Playfair Display text */
 .spec-value {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--graphite);
+    font-family: 'Playfair Display', serif;
     margin-top: 2px;
 }
 
+/* Gradient separator line between specs and selling points */
 .detail-sep {
     height: 1px;
     background: linear-gradient(to right, var(--red), transparent);
@@ -943,6 +947,10 @@ footer {
     opacity: 0.35;
 }
 
+/* ============================================================
+   SELLING POINTS
+   No emojis — red dot used as bullet via ::before pseudo-element
+   ============================================================ */
 .detail-selling-points {
     list-style: none;
     display: flex;
@@ -952,11 +960,27 @@ footer {
 }
 
 .detail-selling-points li {
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: var(--graphite);
     font-weight: 500;
+    padding-left: 16px;
+    position: relative;
 }
 
+/* Red dot bullet point before each selling point */
+.detail-selling-points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+}
+
+/* CTA button — full width, red background */
 .detail-cta {
     display: inline-flex;
     align-items: center;
@@ -980,6 +1004,7 @@ footer {
     box-shadow: 0 12px 35px rgba(166,58,58,0.45);
 }
 
+/* Arrow icon inside the CTA button slides right on hover */
 .detail-cta svg {
     transition: transform 0.3s;
 }
@@ -988,8 +1013,10 @@ footer {
     transform: translateX(5px);
 }
 
+/* Mobile CTA — hidden on desktop, shown on mobile via media query */
 .detail-cta-mobile { display: none; }
 
+/* Phone number hint below the CTA buttons */
 .detail-contact-hint {
     margin-top: 16px;
     text-align: center;
@@ -1348,24 +1375,30 @@ footer {
 /* -----------------------------------------------------------
    CATALOGUE PAGE
 ----------------------------------------------------------- */
+
+/* Hero banner — uses photo_parking.jpg as background
+   position relative allows the absolute background image div */
 .catalogue-hero {
     height: 280px;
-    background: linear-gradient(135deg, var(--graphite) 0%, #1a1010 60%, #3a1010 100%);
+    position: relative;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    position: relative;
-    overflow: hidden;
 }
 
-.catalogue-hero::before {
-    content: '';
+/* Background image div — separate from content for brightness control */
+.catalogue-hero-bg {
     position: absolute;
     inset: 0;
-    background: radial-gradient(ellipse at 70% 50%, rgba(166,58,58,0.2) 0%, transparent 65%);
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.45);
+    z-index: 0;
 }
 
+/* Hero text content sits above the background image */
 .catalogue-hero-content {
     position: relative;
     z-index: 2;
@@ -1390,7 +1423,7 @@ footer {
 
 .catalogue-hero-sub {
     font-size: 1rem;
-    opacity: 0.65;
+    opacity: 0.85;
 }
 
 .catalogue-filters-section {
@@ -1405,6 +1438,7 @@ footer {
     padding: 0 30px;
 }
 
+/* Dynamic result counter updated by catalogue.js */
 .results-count {
     font-size: 0.95rem;
     color: #888;
@@ -1413,6 +1447,7 @@ footer {
     letter-spacing: 0.5px;
 }
 
+/* 3-column vehicle grid */
 .catalogue-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1423,6 +1458,7 @@ footer {
     cursor: pointer;
 }
 
+/* Empty state message when no vehicles match the filters */
 .no-results {
     text-align: center;
     font-size: 1.2rem;
@@ -1430,6 +1466,7 @@ footer {
     padding: 60px 0;
 }
 
+/* Reserve button with deposit amount — outlined red style */
 .btn-reserver {
     display: block;
     margin-top: 12px;
