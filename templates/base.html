@@ -50,32 +50,27 @@
 </footer>
 
 <script>
+
 // -----------------------------------------------
 // CURSEUR PERSONNALISÉ
 // -----------------------------------------------
 const cursor = document.getElementById('custom-cursor');
-let mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
 cursor.textContent = '🏎️';
 
-document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+document.addEventListener('mousemove', (e) => {
+    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+});
 
-function animateCursor() {
-    cursorX += (mouseX - cursorX) * 0.14;
-    cursorY += (mouseY - cursorY) * 0.14;
-    cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-    requestAnimationFrame(animateCursor);
-}
-animateCursor();
-
-// Fonction globale pour attacher les events curseur
 function attachCursorEvents() {
     document.querySelectorAll('a, button, .car-card, .carousel-btn').forEach(el => {
-        if (el._cursorBound) return; // évite les doublons
+        if (el._cursorBound) return;
         el._cursorBound = true;
         el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
         el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
     });
 }
+attachCursorEvents();
+window.refreshCursorEvents = attachCursorEvents;
 
 // Appel initial
 attachCursorEvents();

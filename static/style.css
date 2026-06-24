@@ -1932,25 +1932,24 @@ footer {
 
 #custom-cursor {
     position: fixed;
-    width: 36px;
-    height: 36px;
     pointer-events: none;
     z-index: 99999;
-    top: -18px;
-    left: -18px;
-    font-size: 28px;
+    top: -10px;
+    left: -10px;
+    font-size: 24px;
     line-height: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.2s, font-size 0.2s;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
     user-select: none;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    transition: transform 0.08s ease, font-size 0.2s;
 }
 
 #custom-cursor.cursor-hover {
-    transform: scale(1.35);
-    font-size: 32px;
+    font-size: 30px;
+    top: -14px;
+    left: -14px;
 }
 
 /* -----------------------------------------------------------
@@ -2590,4 +2589,87 @@ footer {
     .page-title {
         font-size: 1.6rem !important;
     }
+}
+
+/* -----------------------------------------------------------
+   PAGE 404
+----------------------------------------------------------- */
+.error-page {
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.error-inner {
+    max-width: 600px;
+}
+
+.error-code {
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--red);
+    opacity: 0.15;
+    line-height: 1;
+    margin-bottom: -20px;
+}
+
+.error-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--graphite);
+    margin-bottom: 20px;
+}
+
+.error-sub {
+    font-size: 1.05rem;
+    color: #888;
+    line-height: 1.8;
+    margin-bottom: 40px;
+}
+
+.error-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.error-btn-primary {
+    padding: 14px 32px;
+    background: var(--red);
+    color: white;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.3s;
+    box-shadow: 0 5px 18px rgba(166,58,58,0.3);
+}
+
+.error-btn-primary:hover {
+    background: #8e2f2f;
+    transform: translateY(-2px);
+}
+
+.error-btn-secondary {
+    padding: 14px 32px;
+    background: transparent;
+    color: var(--graphite);
+    border: 2px solid var(--graphite);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: border-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+.error-btn-secondary:hover {
+    border-color: var(--red);
+    color: var(--red);
+    transform: translateY(-2px);
 }
