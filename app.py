@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, jsonify
+from dotenv import load_dotenv
 import os, requests
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -163,7 +166,7 @@ def check_plate():
         r = requests.get(
             "https://immat-api.fr/api/vehicles",
             params={"plate": plate},
-            headers={"Authorization": "Bearer pk_live_hZEaIxEQC04iHcdEBnKzp0zyox8fTXpNbNhMaF0TAzo"}
+            headers={"Authorization": f"Bearer {os.getenv('IMMAT_API_KEY')}"}
         )
         r.raise_for_status()
         data = r.json()
