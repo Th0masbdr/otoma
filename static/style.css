@@ -65,7 +65,7 @@ header.header-scrolled {
 }
 
 .logo {
-    height: 75px;
+    height: 85px;
 }
 
 .nav-menu {
@@ -116,7 +116,14 @@ header.header-scrolled {
     font-size: 1rem;
     font-weight: bold;
     color: var(--graphite);
+    text-decoration: none;
+    transition: color 0.3s;
 }
+
+.phone:hover {
+    color: var(--red);
+}
+
 
 .btn-rdv {
     padding: 9px 18px;
@@ -1924,35 +1931,6 @@ footer {
 }
 
 /* -----------------------------------------------------------
-   CURSEUR PERSONNALISÉ
------------------------------------------------------------ */
-*, *::before, *::after {
-    cursor: none !important;
-}
-
-#custom-cursor {
-    position: fixed;
-    pointer-events: none;
-    z-index: 99999;
-    top: -10px;
-    left: -10px;
-    font-size: 24px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-    transition: transform 0.08s ease, font-size 0.2s;
-}
-
-#custom-cursor.cursor-hover {
-    font-size: 30px;
-    top: -14px;
-    left: -14px;
-}
-
-/* -----------------------------------------------------------
    ANIMATIONS ENTRÉE
 ----------------------------------------------------------- */
 .animate-in {
@@ -2192,7 +2170,7 @@ footer {
     }
 
     .logo {
-        height: 55px;
+        height: 75px;
     }
 
     .nav-menu {
@@ -2672,4 +2650,16 @@ footer {
     border-color: var(--red);
     color: var(--red);
     transform: translateY(-2px);
+}
+
+/* -----------------------------------------------------------
+   RESERVATION FORM — field error messages
+   Shown below invalid fields after validation
+----------------------------------------------------------- */
+.field-error {
+    display: none;
+    color: var(--red);
+    font-size: 0.82rem;
+    margin-top: 5px;
+    font-weight: 600;
 }

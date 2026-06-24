@@ -1,6 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- ============================================================
+     CATALOGUE PAGE
+     Displays the full vehicle inventory with dynamic filters
+     Vehicle data is passed from Flask and injected as JSON
+     Filtering is handled client-side by catalogue.js
+     ============================================================ -->
+
+<!-- Hero banner with dark gradient background -->
 <section class="catalogue-hero">
     <div class="catalogue-hero-content">
         <p class="catalogue-hero-label">OTOMA — Collection</p>
@@ -9,9 +17,16 @@
     </div>
 </section>
 
-<!-- FILTRES -->
+<!-- ============================================================
+     FILTER BAR
+     Allows users to filter vehicles by brand, model and budget
+     Brand list is pre-populated by Flask via Jinja2
+     Model list is loaded dynamically via the /get_models API
+     ============================================================ -->
 <section class="catalogue-filters-section">
     <div class="filters-bar">
+
+        <!-- Brand filter — options populated by Flask -->
         <div class="filter-group">
             <label class="filter-label">Marque</label>
             <div class="filter-select-wrap">
@@ -21,12 +36,18 @@
                     <option value="{{ b }}">{{ b }}</option>
                     {% endfor %}
                 </select>
+                <!-- Custom dropdown arrow icon -->
                 <span class="filter-arrow">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
                 </span>
             </div>
         </div>
+
+        <!-- Visual divider between filters -->
         <div class="filter-divider"></div>
+
+        <!-- Model filter — disabled until a brand is selected
+             Options are loaded dynamically via the /get_models API -->
         <div class="filter-group">
             <label class="filter-label">Modèle</label>
             <div class="filter-select-wrap">
@@ -38,7 +59,10 @@
                 </span>
             </div>
         </div>
+
         <div class="filter-divider"></div>
+
+        <!-- Budget filter — 3 fixed price ranges -->
         <div class="filter-group">
             <label class="filter-label">Budget</label>
             <div class="filter-select-wrap">
@@ -53,44 +77,76 @@
                 </span>
             </div>
         </div>
+
+        <!-- Search button — triggers POST to /filter_cars via catalogue.js -->
         <button id="search-btn" class="filter-btn">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
             Rechercher
         </button>
+
+        <!-- Reset button — clears all filters and restores full vehicle list -->
         <button id="reset-btn" class="filter-reset-btn">Réinitialiser</button>
+
     </div>
 </section>
 
-<!-- GRILLE VOITURES -->
+<!-- ============================================================
+     VEHICLE GRID
+     Empty container filled dynamically by catalogue.js
+     Shows a result count and a no-results message when needed
+     ============================================================ -->
 <section class="catalogue-section">
+
+    <!-- Dynamic result counter updated by catalogue.js -->
     <p id="results-count" class="results-count"></p>
+
+    <!-- Grid container — cards are injected here by catalogue.js -->
     <div id="catalogue-grid" class="catalogue-grid"></div>
-    <p id="no-results" class="no-results" style="display:none;">Aucun véhicule ne correspond à votre recherche.</p>
+
+    <!-- Message shown when no vehicles match the filters -->
+    <p id="no-results" class="no-results" style="display:none;">
+        Aucun véhicule ne correspond à votre recherche.
+    </p>
+
 </section>
 
-<!-- CONTACT -->
+<!-- ============================================================
+     CONTACT SECTION
+     Displays address, phone, email and an embedded Google Map
+     ============================================================ -->
 <section class="catalogue-contact">
     <div class="catalogue-contact-inner">
+
         <h2 class="catalogue-contact-title">Venez nous rendre visite</h2>
         <p class="catalogue-contact-sub">Notre équipe est disponible 6j/7 pour vous accueillir et vous conseiller.</p>
 
+        <!-- Contact info grid — 3 columns -->
         <div class="catalogue-contact-grid">
+
+            <!-- Address block with copy-to-clipboard button -->
             <div class="contact-info-block">
                 <p class="contact-info-label">Adresse</p>
                 <p class="contact-info-value" id="contact-address">CCI de Chartres — Place des Halles, 28000 Chartres</p>
+                <!-- Triggers copyAddress() on click -->
                 <button class="contact-copy-btn" onclick="copyAddress()">Copier l'adresse</button>
             </div>
+
+            <!-- Phone number with tel: link for mobile users -->
             <div class="contact-info-block">
                 <p class="contact-info-label">Téléphone</p>
                 <p class="contact-info-value"><a href="tel:0610203040">06 10 20 30 40</a></p>
             </div>
+
+            <!-- Email address with mailto: link -->
             <div class="contact-info-block">
                 <p class="contact-info-label">Email</p>
                 <p class="contact-info-value"><a href="mailto:contact@otoma.fr">contact@otoma.fr</a></p>
             </div>
+
         </div>
 
-        <!-- Google Maps embed -->
+        <!-- Google Maps embed pointing to CCI Chartres
+             Falls back to a direct Google Maps link if the iframe fails to load -->
         <div class="catalogue-map">
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2641.2!2d1.4880!3d48.4469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e4065e2b93a8b7%3A0x4d9b2e3e2b3e2b3e!2sCCI%20Chartres!5e0!3m2!1sfr!2sfr!4v1"
@@ -101,18 +157,30 @@
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade">
             </iframe>
+            <!-- Fallback link shown below the map -->
             <p class="map-fallback">
                 Impossible d'afficher la carte ?
                 <a href="https://maps.google.com/?q=CCI+Chartres+Place+des+Halles+28000+Chartres" target="_blank">Ouvrir dans Google Maps</a>
             </p>
         </div>
+
     </div>
 </section>
 
+<!-- ============================================================
+     VEHICLE DATA & SCRIPTS
+     ============================================================ -->
+
+<!-- All vehicle data serialized as JSON and injected into the page
+     Read by catalogue.js on page load to render the initial grid -->
 <script id="carsJson" type="application/json">{{ cars | tojson }}</script>
+
+<!-- catalogue.js handles filtering, grid rendering and cursor refresh -->
 <script src="/static/catalogue.js"></script>
 
 <script>
+// Copy the dealership address to the user's clipboard
+// Updates the button text to "Copié !" for 2 seconds as feedback
 function copyAddress() {
     navigator.clipboard.writeText("CCI de Chartres — Place des Halles, 28000 Chartres");
     const btn = document.querySelector('.contact-copy-btn');

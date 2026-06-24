@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- HERO -->
+<!-- ============================================================
+     APPOINTMENT BOOKING PAGE (RDV)
+     Allows users to book an appointment with an OTOMA advisor
+     Uses an embedded Tally form loaded via a data attribute
+     ============================================================ -->
+
+<!-- Hero banner with dark gradient background -->
 <section class="testdrive-hero">
+    <!-- Decorative diagonal stripe overlay -->
     <div class="testdrive-hero-overlay"></div>
+    <!-- Hero text content -->
     <div class="testdrive-hero-content">
         <p class="testdrive-hero-label">OTOMA — Service premium</p>
         <h1 class="testdrive-hero-title">Prenez rendez-vous</h1>
@@ -11,29 +19,37 @@
     </div>
 </section>
 
-<!-- FORM SECTION -->
+<!-- Main content section -->
 <section class="testdrive-section">
 
+    <!-- White card wrapping the form and its header -->
     <div class="testdrive-card">
 
+        <!-- Decorative header with centered title and red lines -->
         <div class="testdrive-card-header">
             <div class="testdrive-header-line"></div>
             <h2 class="testdrive-card-title">Formulaire de prise de rendez-vous</h2>
             <div class="testdrive-header-line"></div>
         </div>
 
+        <!-- Subtitle explaining the process to the user -->
         <p class="testdrive-card-sub">
             Remplissez ce formulaire et notre équipe vous contactera sous 24h pour confirmer votre rendez-vous.
         </p>
 
-        <!-- Points rassurants -->
+        <!-- Trust badges displayed above the form -->
         <div class="testdrive-badges">
-            <span class="testdrive-badge"> Réponse sous 24h</span>
-            <span class="testdrive-badge"> Sans engagement</span>
-            <span class="testdrive-badge"> Conseiller dédié</span>
+            <span class="testdrive-badge">Réponse sous 24h</span>
+            <span class="testdrive-badge">Sans engagement</span>
+            <span class="testdrive-badge">Conseiller dédié</span>
         </div>
 
-        <!-- Iframe Tally -->
+        <!-- Embedded Tally appointment form
+             Uses data-tally-src instead of src to delay loading
+             The src is set dynamically by the script below
+             - hideBranding=1 hides the "Made with Tally" footer (requires paid plan)
+             - dynamicHeight=1 adjusts the iframe height automatically
+             - transparentBackground=1 blends with the card background -->
         <div class="testdrive-iframe-wrap">
             <iframe data-tally-src="https://tally.so/embed/xXxeQ9?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&hideBranding=1"
                     loading="lazy"
@@ -47,27 +63,45 @@
 
     </div>
 
-    <!-- Bloc confiance bas de page -->
+    <!-- Trust bar displayed below the form card -->
     <div class="testdrive-trust">
+
+        <!-- Number of vehicles sold -->
         <div class="trust-item">
             <span class="trust-icon">🏆</span>
             <span>400+ véhicules vendus</span>
         </div>
+
+        <!-- Visual divider -->
         <div class="trust-divider"></div>
+
+        <!-- Customer satisfaction rate -->
         <div class="trust-item">
             <span class="trust-icon">⭐</span>
             <span>96% de clients satisfaits</span>
         </div>
+
+        <!-- Visual divider -->
         <div class="trust-divider"></div>
+
+        <!-- Clickable phone number -->
         <div class="trust-item">
             <span class="trust-icon">📞</span>
             <span><a href="tel:0610203040">06 10 20 30 40</a></span>
         </div>
+
     </div>
 
 </section>
 
 <script>
+    // ============================================================
+    // TALLY IFRAME LAZY LOADING
+    // Tally forms use a data-tally-src attribute instead of src
+    // to prevent the iframe from loading before the page is ready
+    // This script copies data-tally-src into src to trigger loading
+    // Only runs on iframes that do not already have a src attribute
+    // ============================================================
     document.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((iframe) => {
         iframe.src = iframe.dataset.tallySrc;
     });

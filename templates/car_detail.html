@@ -1,29 +1,47 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- ============================================================
+     CAR DETAIL PAGE
+     Displays full information about a single vehicle
+     Data is passed from the Flask route /car/<car_id>
+     ============================================================ -->
+
 <section class="detail-body">
 
+    <!-- LEFT COLUMN — Vehicle photo and mobile CTA -->
     <div class="detail-left">
+
+        <!-- Main vehicle image with shine hover effect -->
         <div class="detail-main-img-wrap">
             <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" class="detail-main-img">
+            <!-- Decorative shine overlay animated on hover -->
             <div class="detail-img-shine"></div>
         </div>
+
+        <!-- Test drive button — visible on mobile only -->
         <a href="/test_drive" class="detail-cta detail-cta-mobile" style="margin-top:16px;">
             <span>Réserver un essai</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
     </div>
 
+    <!-- RIGHT COLUMN — Vehicle information and action buttons -->
     <div class="detail-right">
 
+        <!-- Vehicle name and year badge -->
         <div class="detail-title-block">
             <h2 class="detail-name">{{ car.brand }} {{ car.model }}</h2>
             <span class="detail-year-tag">{{ car.year }}</span>
         </div>
 
+        <!-- Vehicle price formatted with spaces as thousands separator -->
         <p class="detail-price-main">{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</p>
 
+        <!-- Technical specifications grid -->
         <div class="detail-specs">
+
+            <!-- Horsepower -->
             <div class="spec-item">
                 <div class="spec-icon">⚡</div>
                 <div class="spec-data">
@@ -31,6 +49,8 @@
                     <span class="spec-value">{{ car.hp }} ch</span>
                 </div>
             </div>
+
+            <!-- Mileage formatted with spaces as thousands separator -->
             <div class="spec-item">
                 <div class="spec-icon">🛣️</div>
                 <div class="spec-data">
@@ -38,6 +58,8 @@
                     <span class="spec-value">{{ "{:,.0f}".format(car.km).replace(",", " ") }} km</span>
                 </div>
             </div>
+
+            <!-- Fuel type -->
             <div class="spec-item">
                 <div class="spec-icon">⛽</div>
                 <div class="spec-data">
@@ -45,6 +67,8 @@
                     <span class="spec-value">{{ car.fuel }}</span>
                 </div>
             </div>
+
+            <!-- Transmission type -->
             <div class="spec-item">
                 <div class="spec-icon">⚙️</div>
                 <div class="spec-data">
@@ -52,6 +76,8 @@
                     <span class="spec-value">{{ car.transmission }}</span>
                 </div>
             </div>
+
+            <!-- Exterior color -->
             <div class="spec-item">
                 <div class="spec-icon">🎨</div>
                 <div class="spec-data">
@@ -59,6 +85,8 @@
                     <span class="spec-value">{{ car.color }}</span>
                 </div>
             </div>
+
+            <!-- Model version — displays a dash if not available -->
             <div class="spec-item">
                 <div class="spec-icon">📋</div>
                 <div class="spec-data">
@@ -66,10 +94,13 @@
                     <span class="spec-value">{{ car.modelVersion or "—" }}</span>
                 </div>
             </div>
+
         </div>
 
+        <!-- Visual separator line -->
         <div class="detail-sep"></div>
 
+        <!-- Trust indicators / selling points -->
         <ul class="detail-selling-points">
             <li>✅ Véhicule inspecté et certifié OTOMA</li>
             <li>✅ Historique complet disponible</li>
@@ -77,17 +108,21 @@
             <li>✅ Livraison partout en Europe</li>
         </ul>
 
+        <!-- Test drive button — visible on desktop only -->
         <a href="/test_drive" class="detail-cta detail-cta-desktop">
             <span>Réserver un essai</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
 
-        <!-- BOUTON CAUTION -->
+        <!-- Reservation button with 5% deposit amount
+             Deposit is calculated in the Flask route and formatted here -->
         <a href="/reservation/{{ car.id }}" class="detail-cta-caution">
             Réserver ce véhicule — Caution {{ "{:,.0f}".format((car.price * 0.05) | int).replace(",", " ") }} €
         </a>
 
+        <!-- Phone contact fallback -->
         <p class="detail-contact-hint">ou appelez-nous : <a href="tel:0610203040">06 10 20 30 40</a></p>
+
     </div>
 
 </section>

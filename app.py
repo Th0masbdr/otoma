@@ -1,11 +1,25 @@
+# ============================================================
+# OTOMA — Flask Backend
+# Main application file handling routes and API endpoints
+# ============================================================
+
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import os, requests
 
+# Load environment variables from .env file
 load_dotenv()
 
+# Initialize the Flask application
 app = Flask(__name__)
 
+# ============================================================
+# VEHICLE DATABASE
+# Static list of luxury and high-performance vehicles
+# Each vehicle contains: id, brand, model, version, type,
+# price, mileage, fuel, year, color, horsepower,
+# transmission and image filename
+# ============================================================
 cars = [
     {"id": 1, "brand": "Lamborghini", "model": "Urus", "modelVersion": "4.0 V8 650", "type": "SUV",
      "price": 250900, "km": 19900, "fuel": "Essence", "year": 2021, "color": "Noir", "hp": 650, "transmission": "Automatique", "image": "urus1.png"},
@@ -69,100 +83,152 @@ cars = [
      "price": 600000, "km": 4000, "fuel": "Essence", "year": 2021, "color": "Jaune", "hp": 770, "transmission": "Automatique", "image": "aventador_svj.png"}
 ]
 
+# ============================================================
+# PAGE ROUTES
+# Each route renders the corresponding HTML template
+# ============================================================
+
+# Home page — passes the 3 most recently added vehicles
 @app.route("/")
 def home():
-    stats = [
-        {"value": "400+", "name": "Véhicules vendus"},
-        {"value": "96 %", "name": "Clients satisfaits"},
-        {"value": "15 ans", "name": "d'expérience dans le luxe"},
-    ]
     newest = cars[-3:][::-1]
     return render_template("index.html", cars=newest)
 
+# Catalogue page — passes all vehicles and sorted brand list
 @app.route("/catalogue")
 def catalogue():
     brands = sorted(list({c["brand"] for c in cars}))
     return render_template("catalogue.html", cars=cars, brands=brands)
 
+# Services route redirects to catalogue page
 @app.route("/services")
 def services():
     return render_template("catalogue.html", cars=cars, brands=sorted(list({c["brand"] for c in cars})))
 
+# About page
 @app.route("/about")
 def about():
     return render_template("about.html")
 
+# Test drive booking page
 @app.route("/test_drive")
 def test_drive():
     return render_template("test_drive.html")
 
+# Appointment booking page
 @app.route("/rdv")
 def rdv():
     return render_template("rdv.html", title="Prendre rendez-vous")
 
+# Sell your vehicle page
 @app.route("/sell")
 def sell():
     return render_template("sell.html")
 
+# Cookie policy page
 @app.route("/cookies")
 def cookies():
     return render_template("cookies.html")
 
+# Legal notices page
 @app.route("/mentions_legales")
 def mentions_legales():
     return render_template("mentions_legales.html")
 
+# ============================================================
+# VEHICLE DETAIL ROUTE
+# Finds a vehicle by its ID and renders its detail page
+# Returns 404 if the vehicle is not found
+# ============================================================
 @app.route("/car/<int:car_id>")
 def car_detail(car_id):
+    # Search for the vehicle matching the given ID
     car = next((c for c in cars if c["id"] == car_id), None)
     if not car:
         return "Véhicule introuvable", 404
     return render_template("car_detail.html", car=car)
 
+# ============================================================
+# RESERVATION ROUTE
+# Calculates a 5% deposit based on the vehicle price
+# and renders the reservation page
+# ============================================================
 @app.route("/reservation/<int:car_id>")
 def reservation(car_id):
+    # Search for the vehicle matching the given ID
     car = next((c for c in cars if c["id"] == car_id), None)
     if not car:
         return "Véhicule introuvable", 404
+    # Calculate the deposit amount (5% of vehicle price)
     deposit = round(car["price"] * 0.05)
     return render_template("reservation.html", car=car, deposit=deposit)
 
+# ============================================================
+# API ENDPOINTS
+# RESTful endpoints used by the frontend JavaScript
+# ============================================================
+
+# Returns a sorted list of all unique brands
 @app.route("/get_brands")
 def get_brands():
     brands = sorted(list({c["brand"] for c in cars}))
     return jsonify(brands)
 
+# Returns a sorted list of models filtered by brand
 @app.route("/get_models")
 def get_models():
     brand = request.args.get("brand", "")
     models = sorted(list({c["model"] for c in cars if c["brand"] == brand}))
     return jsonify(models)
 
+# Filters vehicles based on brand, model and budget criteria
 @app.route("/filter_cars", methods=["POST"])
 def filter_cars():
+    # Parse JSON body from the request
     data = request.get_json() or {}
     brand = data.get("brand", "")
     model = data.get("model", "")
     budget = data.get("budget", "")
+
     filtered = cars
+
+    # Apply brand filter if provided
     if brand:
         filtered = [c for c in filtered if c["brand"] == brand]
+
+    # Apply model filter if provided
     if model:
         filtered = [c for c in filtered if c["model"] == model]
+
+    # Apply budget filter based on price range
     if budget == "low":
+        # Under 100,000 €
         filtered = [c for c in filtered if c["price"] < 100000]
     elif budget == "mid":
+        # Between 100,000 € and 1,000,000 €
         filtered = [c for c in filtered if 100000 <= c["price"] <= 1000000]
     elif budget == "high":
+        # Over 1,000,000 €
         filtered = [c for c in filtered if c["price"] > 1000000]
+
     return jsonify(filtered)
 
+# ============================================================
+# LICENSE PLATE API
+# Calls the external immat-api.fr service to retrieve
+# vehicle information from a French license plate number
+# ============================================================
 @app.route("/api/check_plate")
 def check_plate():
     plate = request.args.get("plate", "")
+
+    # Return an error if no plate number is provided
     if not plate:
         return jsonify({"error": "Aucune plaque fournie"}), 400
+
     try:
+        # Call the external API with the plate number
+        # API key is loaded from environment variables
         r = requests.get(
             "https://immat-api.fr/api/vehicles",
             params={"plate": plate},
@@ -170,6 +236,8 @@ def check_plate():
         )
         r.raise_for_status()
         data = r.json()
+
+        # Return only the relevant vehicle fields
         return jsonify({
             "brand": data.get("brand"),
             "model": data.get("model"),
@@ -180,11 +248,21 @@ def check_plate():
             "transmission": data.get("transmission")
         })
     except Exception as e:
+        # Return the error message if the API call fails
         return jsonify({"error": str(e)}), 500
-    
+
+# ============================================================
+# ERROR HANDLERS
+# ============================================================
+
+# Custom 404 error page
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
 
+# ============================================================
+# ENTRY POINT
+# Run the Flask development server
+# ============================================================
 if __name__ == "__main__":
     app.run(debug=True)

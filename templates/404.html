@@ -1,19 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- ============================================================
+     404 ERROR PAGE
+     Displayed when a user navigates to a non-existent route
+     Handled by the Flask @app.errorhandler(404) decorator
+     Provides two navigation options to bring the user back
+     ============================================================ -->
+
 <section class="error-page">
+
+    <!-- Centered error content with fade-in animation -->
     <div class="error-inner animate-in">
+
+        <!-- Large 404 number displayed as a faded watermark -->
         <p class="error-code">404</p>
+
+        <!-- Error title -->
         <h1 class="error-title">Cette page n'existe pas.</h1>
+
+        <!-- Descriptive message using automotive vocabulary to match the brand -->
         <p class="error-sub">
             Il semblerait que vous ayez pris un mauvais virage.<br>
             Le véhicule que vous cherchez n'est peut-être plus disponible, ou l'adresse est incorrecte.
         </p>
+
+        <!-- Navigation buttons — redirect the user to a valid page -->
         <div class="error-actions">
+
+            <!-- Primary CTA — back to home page -->
             <a href="{{ url_for('home') }}" class="error-btn-primary">Retour à l'accueil</a>
+
+            <!-- Secondary CTA — browse the vehicle catalogue -->
             <a href="{{ url_for('catalogue') }}" class="error-btn-secondary">Voir le catalogue</a>
+
         </div>
+
     </div>
+
 </section>
 
 {% endblock %}

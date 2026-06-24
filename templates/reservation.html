@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- ============================================================
+     RESERVATION PAGE
+     Allows users to reserve a vehicle by paying a 5% deposit
+     Vehicle data and deposit amount are passed from Flask
+     This is a simulated payment — no real data is processed
+     ============================================================ -->
+
 <section class="reservation-hero">
     <div class="reservation-hero-content">
         <p class="reservation-hero-label">OTOMA — Réservation</p>
@@ -10,27 +17,39 @@
 </section>
 
 <section class="reservation-body">
+
+    <!-- Vehicle summary — image, price and deposit amount -->
     <div class="reservation-summary">
+
         <div class="reservation-car-img">
             <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}">
         </div>
+
         <div class="reservation-car-info">
             <h2>{{ car.brand }} {{ car.model }}</h2>
             <p class="reservation-car-version">{{ car.modelVersion }} — {{ car.year }}</p>
             <p class="reservation-car-price">Prix : <strong>{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</strong></p>
+
+            <!-- Deposit box — 5% of vehicle price calculated in Flask -->
             <div class="reservation-deposit-box">
                 <p class="deposit-label">Caution de réservation (5%)</p>
                 <p class="deposit-amount">{{ "{:,.0f}".format(deposit).replace(",", " ") }} €</p>
                 <p class="deposit-note">Cette caution est entièrement déduite du prix final lors de l'achat. Elle vous garantit la réservation exclusive du véhicule à votre nom.</p>
             </div>
         </div>
+
     </div>
 
-    <!-- FORMULAIRE PAIEMENT -->
+    <!-- ============================================================
+         PAYMENT FORM
+         Hidden after submission, replaced by loading then confirmation
+         ============================================================ -->
     <div class="reservation-form-card" id="payment-form-section">
+
         <h2 class="reservation-form-title">Vos informations</h2>
         <p class="reservation-form-sub">Toutes vos données sont transmises de manière sécurisée et ne seront jamais partagées à des tiers.</p>
 
+        <!-- Reservation terms and conditions -->
         <div class="reservation-conditions">
             <h3>Conditions de réservation</h3>
             <ul>
@@ -42,8 +61,10 @@
             </ul>
         </div>
 
+        <!-- onsubmit returns false to prevent default HTML form submission -->
         <form id="reservationForm" class="reservation-form" onsubmit="return false;">
 
+            <!-- First name and last name on the same row -->
             <div class="form-row">
                 <div class="form-group">
                     <label>Prénom</label>
@@ -55,25 +76,33 @@
                 </div>
             </div>
 
+            <!-- Email address — validated client-side via regex -->
             <div class="form-group">
                 <label>Adresse e-mail</label>
                 <input type="email" id="email" placeholder="jean.dupont@email.com" required>
+                <!-- Error message shown if email format is invalid -->
+                <span class="field-error" id="emailError">Veuillez entrer une adresse e-mail valide (ex: nom@domaine.fr)</span>
             </div>
 
+            <!-- Phone number — validated to contain exactly 10 digits -->
             <div class="form-group">
                 <label>Numéro de téléphone</label>
-                <input type="tel" id="phone" placeholder="06 12 34 56 78" required>
+                <input type="tel" id="phone" placeholder="06 12 34 56 78" maxlength="14" required>
+                <!-- Error message shown if phone number format is invalid -->
+                <span class="field-error" id="phoneError">Veuillez entrer un numéro de téléphone valide (10 chiffres)</span>
             </div>
 
+            <!-- Postal address -->
             <div class="form-group">
                 <label>Adresse postale</label>
                 <input type="text" id="address" placeholder="12 rue de la Paix" required>
             </div>
 
+            <!-- Zip code and city on the same row -->
             <div class="form-row">
                 <div class="form-group">
                     <label>Code postal</label>
-                    <input type="text" id="zip" placeholder="75001" required>
+                    <input type="text" id="zip" placeholder="75001" maxlength="5" required>
                 </div>
                 <div class="form-group">
                     <label>Ville</label>
@@ -81,10 +110,12 @@
                 </div>
             </div>
 
+            <!-- Visual separator between personal and banking sections -->
             <div class="form-separator">
                 <span>Informations bancaires</span>
             </div>
 
+            <!-- Card number with auto-formatting in groups of 4 digits -->
             <div class="form-group">
                 <label>Numéro de carte</label>
                 <div class="card-input-wrap">
@@ -93,9 +124,11 @@
                 </div>
             </div>
 
+            <!-- Expiry date and CVV on the same row -->
             <div class="form-row">
                 <div class="form-group">
                     <label>Date d'expiration</label>
+                    <!-- Auto-formatted as MM/AA by the input event listener -->
                     <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
                 </div>
                 <div class="form-group">
@@ -104,11 +137,13 @@
                 </div>
             </div>
 
+            <!-- Cardholder name -->
             <div class="form-group">
                 <label>Nom sur la carte</label>
                 <input type="text" id="cardName" placeholder="JEAN DUPONT" required>
             </div>
 
+            <!-- GDPR consent checkbox — mandatory before submission -->
             <div class="form-consent">
                 <label>
                     <input type="checkbox" id="consent" required>
@@ -116,10 +151,12 @@
                 </label>
             </div>
 
+            <!-- Submit button — calls submitReservation() instead of native submit -->
             <button type="button" class="reservation-submit-btn" onclick="submitReservation()">
                 Confirmer la réservation — {{ "{:,.0f}".format(deposit).replace(",", " ") }} €
             </button>
 
+            <!-- Disclaimer — clarifies this is a simulated payment -->
             <p class="reservation-secure-note">
                 🔒 Paiement simulé — Aucune donnée réelle n'est transmise ni stockée. Site réalisé dans le cadre d'un projet de diplôme.
             </p>
@@ -127,14 +164,14 @@
         </form>
     </div>
 
-    <!-- LOADING -->
+    <!-- Loading screen — shown for 4 seconds to simulate a bank connection -->
     <div class="reservation-loading" id="payment-loading" style="display:none;">
         <div class="loading-spinner"></div>
         <p class="loading-title">Connexion à votre banque en cours</p>
         <p class="loading-sub">Veuillez patienter, ne fermez pas cette page...</p>
     </div>
 
-    <!-- CONFIRMATION -->
+    <!-- Confirmation screen — shown after the loading delay -->
     <div class="reservation-confirmation" id="payment-confirmation" style="display:none;">
         <div class="confirmation-icon">✓</div>
         <h2 class="confirmation-title">Paiement confirmé</h2>
@@ -149,33 +186,163 @@
 </section>
 
 <script>
-// Format carte
+// ============================================================
+// CARD NUMBER FORMATTING
+// Automatically formats input into groups of 4 digits
+// e.g. "1234567890123456" → "1234 5678 9012 3456"
+// ============================================================
 document.getElementById('cardNumber')?.addEventListener('input', function() {
     let v = this.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     let matches = v.match(/\d{4,16}/g);
     let match = matches && matches[0] || '';
     let parts = [];
-    for (let i=0, len=match.length; i<len; i+=4) { parts.push(match.substring(i, i+4)); }
+    for (let i=0, len=match.length; i<len; i+=4) {
+        parts.push(match.substring(i, i+4));
+    }
     this.value = parts.length ? parts.join(' ') : v;
 });
 
+// ============================================================
+// EXPIRY DATE FORMATTING
+// Automatically inserts a slash after the month digits
+// e.g. "1225" → "12/25"
+// ============================================================
 document.getElementById('cardExpiry')?.addEventListener('input', function() {
     let v = this.value.replace(/\D/g, '');
     if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2);
     this.value = v;
 });
 
+// ============================================================
+// PHONE NUMBER FORMATTING
+// Auto-formats phone input with spaces every 2 digits
+// e.g. "0612345678" → "06 12 34 56 78"
+// Only allows digit input
+// ============================================================
+document.getElementById('phone')?.addEventListener('input', function() {
+    // Remove all non-digit characters
+    let v = this.value.replace(/\D/g, '');
+    // Limit to 10 digits maximum
+    v = v.substring(0, 10);
+    // Insert a space every 2 digits
+    let formatted = v.match(/.{1,2}/g)?.join(' ') || v;
+    this.value = formatted;
+});
+
+// ============================================================
+// EMAIL VALIDATION
+// Validates email format using a regex pattern
+// Shows or hides the error message accordingly
+// Returns true if valid, false otherwise
+// ============================================================
+function validateEmail(email) {
+    // Standard email regex — requires at least one @ and a domain
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// ============================================================
+// PHONE VALIDATION
+// Validates that the phone number contains exactly 10 digits
+// Returns true if valid, false otherwise
+// ============================================================
+function validatePhone(phone) {
+    // Strip all spaces and check for exactly 10 digits
+    const digits = phone.replace(/\s/g, '');
+    return /^\d{10}$/.test(digits);
+}
+
+// ============================================================
+// REAL-TIME FIELD VALIDATION
+// Shows error messages as the user types
+// ============================================================
+
+// Show email error message in real time
+document.getElementById('email')?.addEventListener('blur', function() {
+    const errorEl = document.getElementById('emailError');
+    if (!validateEmail(this.value)) {
+        errorEl.style.display = 'block';
+        this.style.borderColor = '#A63A3A';
+    } else {
+        errorEl.style.display = 'none';
+        this.style.borderColor = '#2F6B4A';
+    }
+});
+
+// Show phone error message in real time
+document.getElementById('phone')?.addEventListener('blur', function() {
+    const errorEl = document.getElementById('phoneError');
+    if (!validatePhone(this.value)) {
+        errorEl.style.display = 'block';
+        this.style.borderColor = '#A63A3A';
+    } else {
+        errorEl.style.display = 'none';
+        this.style.borderColor = '#2F6B4A';
+    }
+});
+
+// ============================================================
+// FORM SUBMISSION HANDLER
+// Validates all required fields including email and phone format
+// Shows loading screen then confirmation after 4 seconds
+// No real payment is processed — this is a simulation
+// ============================================================
 function submitReservation() {
-    const fields = ['firstName','lastName','email','phone','address','zip','city','cardNumber','cardExpiry','cardCvv','cardName','consent'];
-    for (let id of fields) {
-        const el = document.getElementById(id);
-        if (el && !el.value && el.type !== 'checkbox') { el.focus(); return; }
-        if (el && el.type === 'checkbox' && !el.checked) { alert("Veuillez accepter les conditions de réservation."); return; }
+    let isValid = true;
+
+    // Validate email format
+    const emailInput = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+    if (!validateEmail(emailInput.value)) {
+        emailError.style.display = 'block';
+        emailInput.style.borderColor = '#A63A3A';
+        emailInput.focus();
+        isValid = false;
+    } else {
+        emailError.style.display = 'none';
+        emailInput.style.borderColor = '#2F6B4A';
     }
 
+    // Validate phone number — must contain exactly 10 digits
+    const phoneInput = document.getElementById('phone');
+    const phoneError = document.getElementById('phoneError');
+    if (!validatePhone(phoneInput.value)) {
+        phoneError.style.display = 'block';
+        phoneInput.style.borderColor = '#A63A3A';
+        if (isValid) phoneInput.focus();
+        isValid = false;
+    } else {
+        phoneError.style.display = 'none';
+        phoneInput.style.borderColor = '#2F6B4A';
+    }
+
+    // Validate all other required text fields
+    const textFields = ['firstName','lastName','address','zip','city','cardNumber','cardExpiry','cardCvv','cardName'];
+    for (let id of textFields) {
+        const el = document.getElementById(id);
+        if (el && !el.value.trim()) {
+            el.style.borderColor = '#A63A3A';
+            if (isValid) el.focus();
+            isValid = false;
+        } else if (el) {
+            el.style.borderColor = '';
+        }
+    }
+
+    // Validate GDPR consent checkbox
+    if (!document.getElementById('consent').checked) {
+        alert("Veuillez accepter les conditions de réservation.");
+        isValid = false;
+    }
+
+    // Stop submission if any validation failed
+    if (!isValid) return;
+
+    // Hide the payment form and show the loading screen
     document.getElementById('payment-form-section').style.display = 'none';
     document.getElementById('payment-loading').style.display = 'flex';
 
+    // After 4 seconds, hide loading and show the confirmation screen
     setTimeout(() => {
         document.getElementById('payment-loading').style.display = 'none';
         document.getElementById('payment-confirmation').style.display = 'flex';

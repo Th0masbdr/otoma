@@ -3,37 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dynamic page title — falls back to default if no title passed by Flask -->
     <title>OTOMA - {{ title if title else "Prestige Automobile" }}</title>
+    <!-- Google Fonts — Playfair Display for headings, Lato for body text -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Lato:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Main stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
-<div id="custom-cursor"></div>
-
+<!-- ============================================================
+     HEADER
+     Sticky navigation bar with logo, nav links and contact CTA
+     Becomes frosted glass on scroll via the header-scrolled class
+     ============================================================ -->
 <header id="main-header">
     <div class="header-container">
+
+        <!-- OTOMA logo — enlarged for better visibility -->
         <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="OTOMA Logo">
+
+        <!-- Main navigation links with animated underline on hover -->
         <nav class="nav-menu">
             <a href="{{ url_for('home') }}"><span>Accueil</span></a>
             <a href="{{ url_for('catalogue') }}"><span>Catalogue</span></a>
             <a href="{{ url_for('about') }}"><span>À propos</span></a>
             <a href="{{ url_for('sell') }}"><span>Vendre</span></a>
         </nav>
+
+        <!-- Contact info and appointment CTA -->
         <div class="header-contact">
-            <span class="phone">06 10 20 30 40</span>
+            <!-- Phone number — clickable via tel: link
+                 Allows mobile users to call directly
+                 and desktop users to copy the number -->
+            <a href="tel:0610203040" class="phone">06 10 20 30 40</a>
+            <!-- RDV button wrapped in a link -->
             <a href="{{ url_for('rdv') }}">
                 <button class="btn-rdv">Prendre RDV</button>
             </a>
         </div>
+
     </div>
+    <!-- Red decorative separator line below the header -->
     <div class="header-separator"></div>
 </header>
 
+<!-- ============================================================
+     MAIN CONTENT
+     Each page injects its content here via Jinja2 block inheritance
+     ============================================================ -->
 <main>
     {% block content %}{% endblock %}
 </main>
 
+<!-- ============================================================
+     FOOTER
+     Contains copyright, legal links and OTOMA logo
+     ============================================================ -->
 <footer>
     <div class="footer-content">
         <div class="footer-texts">
@@ -50,45 +76,20 @@
 </footer>
 
 <script>
-
-// -----------------------------------------------
-// CURSEUR PERSONNALISÉ
-// -----------------------------------------------
-const cursor = document.getElementById('custom-cursor');
-cursor.textContent = '🏎️';
-
-document.addEventListener('mousemove', (e) => {
-    cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-});
-
-function attachCursorEvents() {
-    document.querySelectorAll('a, button, .car-card, .carousel-btn').forEach(el => {
-        if (el._cursorBound) return;
-        el._cursorBound = true;
-        el.addEventListener('mouseenter', () => cursor.classList.add('cursor-hover'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-hover'));
-    });
-}
-attachCursorEvents();
-window.refreshCursorEvents = attachCursorEvents;
-
-// Appel initial
-attachCursorEvents();
-
-// Ré-appel disponible globalement pour les pages qui injectent des cartes dynamiquement
-window.refreshCursorEvents = attachCursorEvents;
-
-// -----------------------------------------------
-// HEADER SCROLL
-// -----------------------------------------------
+// ============================================================
+// HEADER SCROLL EFFECT
+// Adds frosted glass style when user scrolls past 60px
+// ============================================================
 const header = document.getElementById('main-header');
 window.addEventListener('scroll', () => {
     header.classList.toggle('header-scrolled', window.scrollY > 60);
 });
 
-// -----------------------------------------------
-// ANIMATIONS ENTRÉE
-// -----------------------------------------------
+// ============================================================
+// SCROLL-TRIGGERED FADE-IN ANIMATIONS
+// Observes elements with 'animate-in' class and triggers
+// the CSS transition when they enter the viewport
+// ============================================================
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -102,11 +103,14 @@ function observeAnimations() {
     document.querySelectorAll('.animate-in:not(.is-visible)').forEach(el => observer.observe(el));
 }
 observeAnimations();
+
+// Exposed globally so dynamic pages can trigger it after injecting new DOM elements
 window.refreshAnimations = observeAnimations;
 
-// -----------------------------------------------
-// PARALLAXE HERO
-// -----------------------------------------------
+// ============================================================
+// HERO PARALLAX EFFECT
+// Moves the hero image at 30% of scroll speed for depth effect
+// ============================================================
 const heroBg = document.querySelector('.concession-img');
 if (heroBg) {
     window.addEventListener('scroll', () => {

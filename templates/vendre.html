@@ -1,3 +1,11 @@
+<!-- ============================================================
+     SELL VEHICLE PAGE (Legacy standalone version)
+     Note: This is an older standalone HTML file that does not
+     extend base.html. The current version of this page is
+     sell.html which uses the Jinja2 template inheritance system.
+     This file is kept for reference only.
+     ============================================================ -->
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -5,16 +13,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vendre votre véhicule - OTOMA</title>
 
+    <!-- Google Fonts — Playfair Display for headings, Lato for body text -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Main stylesheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
+<!-- ============================================================
+     HEADER
+     Standalone header — not shared via base.html template
+     ============================================================ -->
 <header>
+
+    <!-- OTOMA logo -->
     <div class="logo">
         <img src="{{ url_for('static', filename='logo.png') }}" alt="OTOMA Logo">
     </div>
 
+    <!-- Main navigation links -->
     <nav>
         <a href="/">Accueil</a>
         <a href="#">Services</a>
@@ -22,29 +39,39 @@
         <a href="/vendre">Vendre votre véhicule</a>
     </nav>
 
+    <!-- Contact info and appointment CTA -->
     <div class="header-contact">
         <span class="phone">06 10 20 30 40</span>
         <button class="btn-rdv">Prendre RDV</button>
     </div>
+
 </header>
 
-
+<!-- ============================================================
+     SELL FORM SECTION
+     Step 1 — user enters license plate to auto-fill vehicle info
+     Step 2 — user fills in mileage, price and photos
+     ============================================================ -->
 <section class="sell-section">
     <h1>Vendre votre véhicule</h1>
     <p>Indiquez votre plaque pour retrouver automatiquement les informations de votre véhicule.</p>
 
+    <!-- enctype allows file uploads (vehicle photos) -->
     <form id="sellForm" enctype="multipart/form-data">
 
-        <!-- PLAQUE -->
+        <!-- Step 1 — License plate input -->
         <label>Plaque d'immatriculation :</label>
         <input type="text" id="plate" placeholder="AB-123-CD" required>
 
+        <!-- Triggers the external plate lookup API — does not submit the form -->
         <button type="button" id="checkPlateBtn" class="btn-search">Récupérer les informations</button>
 
-        <!-- RÉSULTATS API -->
+        <!-- Vehicle info container — hidden until a plate lookup succeeds
+             Fields are read-only as they are filled automatically by the API -->
         <div id="vehicleInfo" class="hidden">
             <h3>Informations détectées :</h3>
 
+            <!-- Read-only fields populated by the /api/check_plate endpoint -->
             <label>Marque :</label>
             <input type="text" id="brand" readonly>
 
@@ -58,28 +85,38 @@
             <input type="text" id="fuel" readonly>
         </div>
 
-        <!-- INFOS MANUELLES -->
+        <!-- Step 2 — Manual fields filled in by the seller -->
+
+        <!-- Mileage in kilometers -->
         <label>Kilométrage :</label>
         <input type="number" id="km" placeholder="Ex : 128000" required>
 
+        <!-- Desired selling price in euros -->
         <label>Prix souhaité (€) :</label>
         <input type="number" id="price" placeholder="Ex : 15900" required>
 
-        <!-- UPLOAD -->
+        <!-- Vehicle photo upload — accepts image files only, multiple allowed -->
         <label>Photos du véhicule :</label>
         <input type="file" id="images" multiple accept="image/*" required>
 
+        <!-- Form submission button -->
         <button type="submit" class="btn-rdv">Envoyer la demande</button>
+
     </form>
 </section>
 
-
+<!-- ============================================================
+     FOOTER
+     Standalone footer — not shared via base.html template
+     ============================================================ -->
 <footer>
     <a href="#">Cookies</a>
     <a href="#">Mentions légales</a>
     <img src="{{ url_for('static', filename='logo.png') }}" alt="OTOMA Logo">
 </footer>
 
+<!-- Main JavaScript file -->
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
 </html>

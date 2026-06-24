@@ -1,21 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- ============================================================
+     SELL YOUR VEHICLE PAGE
+     Allows users to submit a vehicle for sale via license plate
+     The plate number is sent to the /api/check_plate endpoint
+     which calls the external immat-api.fr service
+     ============================================================ -->
+
+<!-- Hero banner with page title and subtitle -->
 <section class="sell-hero">
     <h1 class="sell-title">Vendez votre véhicule en toute simplicité</h1>
     <p class="sell-subtitle">Expertise, transparence, estimation grâce à votre plaque.</p>
 </section>
 
+<!-- Main form section -->
 <section class="sell-form-section">
     <form id="sellForm" class="sell-form">
 
-        <!-- Plaque d'immatriculation -->
+        <!-- Step 1 — License plate lookup -->
         <label>Votre plaque d'immatriculation</label>
         <input type="text" id="plate" placeholder="AB-123-CD" required>
+        <!-- Triggers the plate check API call — does not submit the form -->
         <button type="button" id="checkPlateBtn" class="sell-btn">Rechercher</button>
 
-        <!-- Conteneur infos véhicule (rempli après recherche) -->
+        <!-- Vehicle info container — hidden by default
+             Revealed after a successful plate lookup -->
         <div id="vehicleInfo" style="display:none; margin-top:20px;">
+
+            <!-- Vehicle details retrieved from the external API -->
             <h3>Informations du véhicule</h3>
             <p><strong>Marque :</strong> <span id="infoBrand"></span></p>
             <p><strong>Modèle :</strong> <span id="infoModel"></span></p>
@@ -25,17 +38,18 @@
             <p><strong>Puissance :</strong> <span id="infoHP"></span> ch</p>
             <p><strong>Transmission :</strong> <span id="infoTransmission"></span></p>
 
-            <!-- Champs véhicule supplémentaires -->
+            <!-- Step 2 — Additional vehicle details filled in by the seller -->
             <label>Kilométrage</label>
             <input type="number" id="km" required>
 
             <label>Prix souhaité (€)</label>
             <input type="number" id="price" required>
 
+            <!-- Optional vehicle photos upload -->
             <label>Photos du véhicule</label>
             <input type="file" id="images" multiple>
 
-            <!-- 🆕 Infos personnelles du vendeur à la fin -->
+            <!-- Step 3 — Seller personal information -->
             <h3 style="margin-top:25px;">Vos coordonnées</h3>
 
             <label>Adresse e-mail</label>
@@ -44,30 +58,35 @@
             <label>Numéro de téléphone</label>
             <input type="tel" id="phone" required placeholder="06 12 34 56 78">
 
-            <!-- 🆕 Case obligatoire RGPD -->
+            <!-- GDPR consent checkbox — mandatory before form submission -->
             <div style="margin-top:15px;">
                 <label style="display:inline-flex; align-items:center; gap:10px; white-space:nowrap; cursor:pointer;">
                     <input type="checkbox" id="consent" required style="width:18px; height:18px;">
-                    <span>J’accepte que OTOMA récupère et stocke mes données</span>
+                    <span>J'accepte que OTOMA récupère et stocke mes données</span>
                 </label>
             </div>
 
+            <!-- Form submission button -->
             <button type="submit" class="sell-btn" style="margin-top:20px;">Envoyer la demande</button>
         </div>
 
+        <!-- Status message displayed below the form
+             Shows errors or success feedback to the user -->
         <p id="sellMessage" class="sell-message"></p>
+
     </form>
 </section>
 
 <script>
-// -------------------------------
-// DOM ELEMENTS
-// -------------------------------
+// ============================================================
+// DOM ELEMENT REFERENCES
+// ============================================================
 const plateInput = document.getElementById("plate");
 const checkPlateBtn = document.getElementById("checkPlateBtn");
 const vehicleInfo = document.getElementById("vehicleInfo");
 const sellForm = document.getElementById("sellForm");
 
+// Span elements filled with data returned by the plate API
 const infoBrand = document.getElementById("infoBrand");
 const infoModel = document.getElementById("infoModel");
 const infoYear = document.getElementById("infoYear");
@@ -76,25 +95,35 @@ const infoColor = document.getElementById("infoColor");
 const infoHP = document.getElementById("infoHP");
 const infoTransmission = document.getElementById("infoTransmission");
 
+// Status message element
 const sellMessage = document.getElementById("sellMessage");
 
-// -------------------------------
-// CHECK PLATE VIA API
-// -------------------------------
+// ============================================================
+// LICENSE PLATE LOOKUP
+// Sends the plate number to the Flask /api/check_plate endpoint
+// which calls the external immat-api.fr service
+// On success, fills in the vehicle info and reveals the form
+// On failure, shows an error message
+// ============================================================
 checkPlateBtn.addEventListener("click", async () => {
+    // Clean the plate input by removing dashes and spaces
     const plate = plateInput.value.trim().replace(/[-\s]/g, "");
+
     if (!plate) {
         alert("Veuillez entrer une plaque valide.");
         return;
     }
 
     sellMessage.textContent = "Recherche en cours...";
+
     try {
+        // Call the Flask proxy endpoint which queries the external API
         const res = await fetch(`/api/check_plate?plate=${plate}`);
         if (!res.ok) throw new Error("Plaque non trouvée.");
         const data = await res.json();
 
-        // Remplir les infos
+        // Populate the vehicle info spans with API response data
+        // Falls back to "-" if a field is missing
         infoBrand.textContent = data.brand || "-";
         infoModel.textContent = data.model || "-";
         infoYear.textContent = data.year || "-";
@@ -103,31 +132,37 @@ checkPlateBtn.addEventListener("click", async () => {
         infoHP.textContent = data.hp || "-";
         infoTransmission.textContent = data.transmission || "-";
 
+        // Reveal the vehicle info and additional form fields
         vehicleInfo.style.display = "block";
         sellMessage.textContent = "";
+
     } catch (err) {
+        // Hide the vehicle info and show an error message
         vehicleInfo.style.display = "none";
         sellMessage.textContent = "Impossible de retrouver le véhicule. Vérifiez votre plaque.";
     }
 });
 
-// -------------------------------
-// SUBMIT FORM
-// -------------------------------
+// ============================================================
+// FORM SUBMISSION HANDLER
+// Validates the GDPR consent checkbox before allowing submission
+// Shows a success message — real backend submission to be added later
+// ============================================================
 sellForm.addEventListener("submit", async (e) => {
+    // Prevent the default HTML form submission
     e.preventDefault();
 
-    // Vérification de la case RGPD
+    // Block submission if the GDPR consent checkbox is not checked
     if (!document.getElementById("consent").checked) {
         sellMessage.textContent = "Vous devez accepter que OTOMA stocke vos données.";
         sellMessage.style.color = "red";
         return;
     }
 
+    // Show a success message to the user
+    // Real backend submission (email, database) to be implemented later
     sellMessage.style.color = "green";
     sellMessage.textContent = "Demande envoyée ! Nous vous contacterons rapidement.";
-
-    // Ici tu ajouteras l’envoi réel au backend plus tard
 });
 </script>
 

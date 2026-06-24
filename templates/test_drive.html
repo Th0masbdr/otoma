@@ -1,53 +1,98 @@
 {% extends "base.html" %}
 {% block content %}
 
+<!-- ============================================================
+     TEST DRIVE BOOKING PAGE
+     Allows users to book a test drive via an embedded Tally form
+     ============================================================ -->
+
+<!-- Hero banner section with dark gradient background -->
 <section class="testdrive-hero">
+
+    <!-- Decorative diagonal stripe overlay -->
     <div class="testdrive-hero-overlay"></div>
+
+    <!-- Hero text content -->
     <div class="testdrive-hero-content">
         <p class="testdrive-hero-label">OTOMA — Expérience exclusive</p>
         <h1 class="testdrive-hero-title">Réservez votre essai</h1>
         <p class="testdrive-hero-sub">Un expert vous accompagne pour vivre votre véhicule de rêve.</p>
     </div>
+
 </section>
 
+<!-- Main content section containing the form card and trust bar -->
 <section class="testdrive-section">
+
+    <!-- White card wrapping the form and its header -->
     <div class="testdrive-card">
+
+        <!-- Decorative header with centered title and red lines -->
         <div class="testdrive-card-header">
             <div class="testdrive-header-line"></div>
             <h2 class="testdrive-card-title">Formulaire de réservation</h2>
             <div class="testdrive-header-line"></div>
         </div>
+
+        <!-- Subtitle explaining the process to the user -->
         <p class="testdrive-card-sub">
             Remplissez ce formulaire et notre équipe vous contactera sous 24h pour confirmer votre créneau.
         </p>
+
+        <!-- Trust badges displayed above the form -->
         <div class="testdrive-badges">
             <span class="testdrive-badge">Réponse sous 24h</span>
             <span class="testdrive-badge">Sans engagement</span>
             <span class="testdrive-badge">Conseiller dédié</span>
         </div>
+
+        <!-- Embedded Tally form
+             - hideBranding=1 hides the "Made with Tally" footer (requires paid plan)
+             - dynamicHeight=1 adjusts the iframe height automatically
+             - transparentBackground=1 blends the form with the card background -->
         <div class="testdrive-iframe-wrap">
             <iframe src="https://tally.so/embed/rjj1xM?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1&hideBranding=1"
-                    loading="lazy" width="100%" height="600" frameborder="0"
-                    marginheight="0" marginwidth="0" title="Réserver un essai"></iframe>
+                    loading="lazy"
+                    width="100%"
+                    height="600"
+                    frameborder="0"
+                    marginheight="0"
+                    marginwidth="0"
+                    title="Réserver un essai"></iframe>
         </div>
+
     </div>
+
+    <!-- Trust bar displayed below the form card -->
     <div class="testdrive-trust">
+
+        <!-- Number of vehicles sold -->
         <div class="trust-item">
             <span class="trust-icon">🏆</span>
             <span>400+ véhicules vendus</span>
         </div>
+
+        <!-- Visual divider -->
         <div class="trust-divider"></div>
+
+        <!-- Customer satisfaction rate -->
         <div class="trust-item">
             <span class="trust-icon">⭐</span>
             <span>96% de clients satisfaits</span>
         </div>
+
+        <!-- Visual divider -->
         <div class="trust-divider"></div>
+
+        <!-- Clickable phone number -->
         <div class="trust-item">
             <span>
                 <a href="tel:0610203040">06 10 20 30 40</a>
             </span>
         </div>
+
     </div>
+
 </section>
 
 {% endblock %}

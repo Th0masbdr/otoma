@@ -1,17 +1,31 @@
 {% extends "base.html" %}
 {% block content %}
 
-<!-- HERO -->
+<!-- ============================================================
+     HOME PAGE
+     Displays the hero banner, the 3 newest vehicles,
+     the OTOMA pitch section and customer reviews
+     Vehicle data is passed from the Flask home() route
+     ============================================================ -->
+
+<!-- Hero banner with concession background image and parallax effect -->
 <section class="concession-section">
     <img src="{{ url_for('static', filename='concession.png') }}" alt="Concession" class="concession-img">
+    <!-- Overlay text centered on the hero image -->
     <div class="concession-overlay">
         <h1 class="hero-title">L'excellence automobile, à portée de main.</h1>
         <p class="hero-sub">Découvrez notre sélection de véhicules d'exception.</p>
     </div>
 </section>
 
-<!-- NOUVEAUTÉS -->
+<!-- ============================================================
+     LATEST ARRIVALS SECTION
+     Displays the 3 most recently added vehicles as static cards
+     Cars are passed from Flask as cars[-3:][::-1]
+     ============================================================ -->
 <section class="cars-section">
+
+    <!-- Section header with fade-in animation -->
     <div class="nouveautes-header animate-in">
         <h2 class="section-title">Dernières arrivées</h2>
         <p class="nouveautes-sub">
@@ -20,11 +34,19 @@
         </p>
     </div>
 
+    <!-- Static 3-column grid — no carousel, no JavaScript needed -->
     <div class="nouveautes-grid">
+
+        <!-- Loop through the 3 newest vehicles passed by Flask -->
         {% for car in cars %}
+        <!-- Clicking anywhere on the card navigates to the vehicle detail page -->
         <div class="car-card animate-in" onclick="window.location.href='/car/{{ car.id }}'">
+
+            <!-- Vehicle image with color-coded type badge -->
             <div class="car-img">
                 <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
+
+                <!-- Badge color changes based on vehicle type -->
                 <span class="car-type-badge" style="background:
                     {% if car.type == 'SUV' %}#2F6B4A
                     {% elif car.type == 'Sportive' %}#A63A3A
@@ -33,56 +55,95 @@
                     {% else %}#555{% endif %}
                 ">{{ car.type }}</span>
             </div>
+
+            <!-- Card body with vehicle info -->
             <div class="car-card-body">
+
+                <!-- Vehicle brand and model -->
                 <h3 class="car-title">{{ car.brand }} {{ car.model }}</h3>
+
+                <!-- Model version — empty string if not available -->
                 <p class="car-version">{{ car.modelVersion or "" }}</p>
+
+                <!-- Key specs displayed as pills -->
                 <div class="car-card-specs">
                     <span class="car-spec-pill">⚡ {{ car.hp }} ch</span>
                     <span class="car-spec-pill">{{ car.fuel }}</span>
                     <span class="car-spec-pill">{{ car.year }}</span>
                 </div>
+
+                <!-- Price and call-to-action -->
                 <div class="car-card-footer">
+                    <!-- Price formatted with spaces as thousands separator -->
                     <span class="car-price-tag">{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</span>
+                    <!-- Arrow CTA that expands on hover via CSS -->
                     <span class="car-card-cta">Voir →</span>
                 </div>
+
             </div>
         </div>
         {% endfor %}
+
     </div>
 
+    <!-- Button linking to the full catalogue page -->
     <div class="nouveautes-cta animate-in">
         <a href="{{ url_for('catalogue') }}" class="btn-catalogue">Voir tout le catalogue</a>
     </div>
+
 </section>
 
-<!-- TEXTE OTOMA -->
+<!-- ============================================================
+     OTOMA PITCH SECTION
+     Brand presentation text to build trust and drive conversions
+     ============================================================ -->
 <section class="otoma-pitch">
     <div class="otoma-pitch-inner animate-in">
+
+        <!-- Small label above the title -->
         <p class="otoma-pitch-label">Pourquoi OTOMA</p>
+
+        <!-- Main pitch title -->
         <h2 class="otoma-pitch-title">Une autre façon d'acheter une voiture d'exception.</h2>
+
+        <!-- First paragraph — quality and selection -->
         <p class="otoma-pitch-text">
             Chez OTOMA, nous avons fait le choix de la qualité sur la quantité. Chaque véhicule que nous proposons
             a été sélectionné, inspecté et validé par notre équipe — parce qu'une voiture de prestige ne mérite
             pas moins qu'une attention absolue. Depuis Chartres, nous accompagnons des passionnés à travers toute
             la France dans l'acquisition de véhicules qui les font vibrer.
         </p>
+
+        <!-- Second paragraph — personalized service -->
         <p class="otoma-pitch-text">
             Que vous recherchiez une sportive pour le plaisir, un SUV de luxe pour le quotidien ou une pièce rare
             pour compléter votre collection, notre équipe est à votre écoute — sans pression, sans compromis,
             avec une seule priorité : vous.
         </p>
+
+        <!-- Link to the About page -->
         <a href="{{ url_for('about') }}" class="otoma-pitch-link">En savoir plus sur OTOMA →</a>
+
     </div>
 </section>
 
-<!-- AVIS CLIENTS -->
+<!-- ============================================================
+     CUSTOMER REVIEWS SECTION
+     Static testimonials with 5-star ratings and avatar initials
+     ============================================================ -->
 <section class="reviews">
+
     <h2 class="section-title animate-in">Retours clients</h2>
     <p class="reviews-sub animate-in">Ce que nos clients disent de leur expérience OTOMA</p>
+
     <div class="reviews-grid">
+
+        <!-- Review 1 — Julien P. -->
         <div class="review-card animate-in">
+            <!-- 5-star rating displayed as unicode characters -->
             <div class="review-stars">★★★★★</div>
             <p class="review-text">"J'ai été accompagné par Thomas tout au long de l'achat de ma Lamborghini Urus. Professionnalisme et conseils personnalisés. Je recommande vivement OTOMA."</p>
+            <!-- Reviewer info with initial avatar -->
             <div class="review-footer">
                 <div class="review-avatar">J</div>
                 <div>
@@ -91,6 +152,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Review 2 — Sophie R. -->
         <div class="review-card animate-in">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">"Grâce à OTOMA, j'ai pu trouver exactement la Ferrari F8 que je cherchais. Service impeccable et suivi parfait du début à la fin."</p>
@@ -102,6 +165,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Review 3 — Antoine M. -->
         <div class="review-card animate-in">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">"L'équipe est très réactive et à l'écoute. J'ai acheté ma Porsche 911 et tout s'est déroulé sans aucun problème. Une expérience vraiment premium."</p>
@@ -113,6 +178,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </section>
 
