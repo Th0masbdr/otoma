@@ -130,6 +130,7 @@
 <!-- ============================================================
      CUSTOMER REVIEWS SECTION
      Static testimonials with 5-star ratings and avatar initials
+     Includes a delivery photo below the review cards
      ============================================================ -->
 <section class="reviews">
 
@@ -137,13 +138,9 @@
     <p class="reviews-sub animate-in">Ce que nos clients disent de leur expérience OTOMA</p>
 
     <div class="reviews-grid">
-
-        <!-- Review 1 — Julien P. -->
         <div class="review-card animate-in">
-            <!-- 5-star rating displayed as unicode characters -->
             <div class="review-stars">★★★★★</div>
             <p class="review-text">"J'ai été accompagné par Thomas tout au long de l'achat de ma Lamborghini Urus. Professionnalisme et conseils personnalisés. Je recommande vivement OTOMA."</p>
-            <!-- Reviewer info with initial avatar -->
             <div class="review-footer">
                 <div class="review-avatar">J</div>
                 <div>
@@ -152,8 +149,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Review 2 — Sophie R. -->
         <div class="review-card animate-in">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">"Grâce à OTOMA, j'ai pu trouver exactement la Ferrari F8 que je cherchais. Service impeccable et suivi parfait du début à la fin."</p>
@@ -165,8 +160,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Review 3 — Antoine M. -->
         <div class="review-card animate-in">
             <div class="review-stars">★★★★★</div>
             <p class="review-text">"L'équipe est très réactive et à l'écoute. J'ai acheté ma Porsche 911 et tout s'est déroulé sans aucun problème. Une expérience vraiment premium."</p>
@@ -178,8 +171,16 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <!-- Delivery photo — placed below the review cards -->
+    <div class="reviews-photo animate-in">
+        <img
+            src="{{ url_for('static', filename='photo_livraison.png') }}"
+            alt="Remise des clés chez OTOMA"
+            class="reviews-photo-img">
+    </div>
+
 </section>
 
 {% endblock %}

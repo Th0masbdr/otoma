@@ -2700,3 +2700,28 @@ footer {
     margin-top: 5px;
     font-weight: 600;
 }
+
+/* -----------------------------------------------------------
+   REVIEWS — delivery photo above the cards
+----------------------------------------------------------- */
+.reviews-photo {
+    max-width: 900px;
+    margin: 50px auto 0;
+    padding: 0 20px;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+}
+
+.reviews-photo-img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+    border-radius: 16px;
+    transition: transform 0.6s ease;
+}
+
+.reviews-photo:hover .reviews-photo-img {
+    transform: scale(1.02);
+}
