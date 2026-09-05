@@ -3,15 +3,24 @@
 # Main application file handling routes and API endpoints
 # ============================================================
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
 from dotenv import load_dotenv
-import os, requests
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+import os, requests, bcrypt, re
+from datetime import datetime
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Initialize the Flask application
 app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY", "otoma_secret")
+
+# ─── CONNEXION MONGODB ───────────────────────────────
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client["otoma"]
+users_col     = db["users"]
+favorites_col = db["favorites"]
+requests_col  = db["requests"]
 
 # ============================================================
 # VEHICLE DATABASE
@@ -238,15 +247,37 @@ def check_plate():
             }
         )
         r.raise_for_status()
-        data = r.json()
+        data = r.json().get("data", {})
+
+        # Puissance : "131 CH" → "131"
+        puissance_raw = data.get("puisFiscReelCH", "")
+        puissance = puissance_raw.replace("CH", "").strip() if puissance_raw else "N/A"
+
+        # Année : "2009-04-18" → "2009"
+        annee = data.get("date1erCir_fr", "")[:4] or "N/A"
+
+        # Couleur : souvent vide dans le SIV
+        couleur = data.get("couleur") or "Non renseignée"
+
+        # Transmission : boite_vitesse M = Manuelle, A = Automatique
+        boite = data.get("boite_vitesse", "")
+        if boite == "M":
+            transmission = "Manuelle"
+        elif boite == "A":
+            transmission = "Automatique"
+        else:
+            transmission = data.get("type_transmission", "N/A")
+
         return jsonify({
-            "brand":        data.get("marque"),
-            "model":        data.get("modele"),
-            "year":         data.get("date_mise_en_circulation", "")[:4],
-            "fuel":         data.get("energie"),
-            "color":        data.get("couleur"),
-            "hp":           data.get("puissance_chevaux"),
-            "transmission": data.get("type_boite_vitesse"),
+            "brand":        data.get("marque", "N/A"),
+            "model":        data.get("modele", "N/A"),
+            "version":      data.get("version", ""),
+            "year":         annee,
+            "fuel":         data.get("type_moteur", "N/A"),
+            "color":        couleur,
+            "hp":           puissance,
+            "transmission": transmission,
+            "carrosserie":  data.get("carrosserie", ""),
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -259,6 +290,179 @@ def check_plate():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html"), 404
+
+
+
+# ============================================================
+# HELPERS AUTH
+# ============================================================
+
+def current_user():
+    """Returns the current logged-in user document or None"""
+    uid = session.get("user_id")
+    if not uid:
+        return None
+    return users_col.find_one({"_id": ObjectId(uid)})
+
+def login_required(f):
+    """Decorator to protect routes that require authentication"""
+    from functools import wraps
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get("user_id"):
+            flash("Connectez-vous pour accéder à cette page.", "error")
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+    return decorated
+
+# ============================================================
+# INSCRIPTION
+# ============================================================
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        data = request.get_json() or request.form
+        prenom  = data.get("prenom", "").strip()
+        nom     = data.get("nom", "").strip()
+        email   = data.get("email", "").strip().lower()
+        mdp     = data.get("password", "")
+
+        # Validations
+        if not all([prenom, nom, email, mdp]):
+            return jsonify({"error": "Tous les champs sont obligatoires"}), 400
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            return jsonify({"error": "Email invalide"}), 400
+        if len(mdp) < 8:
+            return jsonify({"error": "Mot de passe trop court (8 caractères minimum)"}), 400
+        if users_col.find_one({"email": email}):
+            return jsonify({"error": "Un compte existe déjà avec cet email"}), 409
+
+        # Hash mot de passe
+        hashed = bcrypt.hashpw(mdp.encode(), bcrypt.gensalt())
+
+        # Insertion en base
+        user_id = users_col.insert_one({
+            "prenom":      prenom,
+            "nom":         nom,
+            "email":       email,
+            "password":    hashed,
+            "created_at":  datetime.utcnow(),
+        }).inserted_id
+
+        # Connexion automatique après inscription
+        session["user_id"]    = str(user_id)
+        session["user_name"]  = prenom
+
+        return jsonify({"success": True, "redirect": url_for("compte")}), 200
+
+    return render_template("register.html")
+
+# ============================================================
+# CONNEXION
+# ============================================================
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        data  = request.get_json() or request.form
+        email = data.get("email", "").strip().lower()
+        mdp   = data.get("password", "")
+
+        user = users_col.find_one({"email": email})
+        if not user or not bcrypt.checkpw(mdp.encode(), user["password"]):
+            return jsonify({"error": "Email ou mot de passe incorrect"}), 401
+
+        session["user_id"]   = str(user["_id"])
+        session["user_name"] = user["prenom"]
+
+        return jsonify({"success": True, "redirect": url_for("compte")}), 200
+
+    return render_template("login.html")
+
+# ============================================================
+# DÉCONNEXION
+# ============================================================
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("home"))
+
+# ============================================================
+# ESPACE CLIENT
+# ============================================================
+
+@app.route("/compte")
+@login_required
+def compte():
+    uid = session["user_id"]
+
+    # Favoris
+    favs = list(favorites_col.find({"user_id": uid}))
+    fav_car_ids = [f["car_id"] for f in favs]
+    fav_cars = [c for c in cars if c["id"] in fav_car_ids]
+
+    # Demandes
+    demandes = list(requests_col.find({"user_id": uid}).sort("created_at", -1))
+
+    return render_template("compte.html",
+        user=current_user(),
+        fav_cars=fav_cars,
+        demandes=demandes
+    )
+
+# ============================================================
+# FAVORIS
+# ============================================================
+
+@app.route("/api/favorite/<int:car_id>", methods=["POST"])
+def toggle_favorite(car_id):
+    if not session.get("user_id"):
+        return jsonify({"error": "Non connecté"}), 401
+
+    uid = session["user_id"]
+    existing = favorites_col.find_one({"user_id": uid, "car_id": car_id})
+
+    if existing:
+        # Retirer des favoris
+        favorites_col.delete_one({"_id": existing["_id"]})
+        return jsonify({"status": "removed"})
+    else:
+        # Ajouter aux favoris
+        favorites_col.insert_one({
+            "user_id":    uid,
+            "car_id":     car_id,
+            "created_at": datetime.utcnow()
+        })
+        return jsonify({"status": "added"})
+
+@app.route("/api/favorites")
+def get_favorites():
+    if not session.get("user_id"):
+        return jsonify([])
+    uid = session["user_id"]
+    favs = list(favorites_col.find({"user_id": uid}))
+    return jsonify([f["car_id"] for f in favs])
+
+# ============================================================
+# ENREGISTRER UNE DEMANDE
+# ============================================================
+
+@app.route("/api/save_request", methods=["POST"])
+def save_request():
+    if not session.get("user_id"):
+        return jsonify({"error": "Non connecté"}), 401
+
+    data = request.get_json() or {}
+    requests_col.insert_one({
+        "user_id":    session["user_id"],
+        "type":       data.get("type"),
+        "details":    data.get("details", {}),
+        "statut":     "En attente",
+        "created_at": datetime.utcnow()
+    })
+    return jsonify({"success": True})
 
 # ============================================================
 # ENTRY POINT

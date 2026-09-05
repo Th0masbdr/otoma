@@ -32,16 +32,17 @@
         </nav>
 
         <!-- Contact info and appointment CTA -->
-        <div class="header-contact">
-            <!-- Phone number — clickable via tel: link
-                 Allows mobile users to call directly
-                 and desktop users to copy the number -->
-            <a href="tel:0610203040" class="phone">06 10 20 30 40</a>
-            <!-- RDV button wrapped in a link -->
-            <a href="{{ url_for('rdv') }}">
-                <button class="btn-rdv">Prendre RDV</button>
-            </a>
-        </div>
+<div class="header-contact">
+    <a href="tel:0610203040" class="phone">06 10 20 30 40</a>
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('compte') }}" class="btn-compte">{{ session.get('user_name') }}</a>
+    {% else %}
+        <a href="{{ url_for('login') }}" class="btn-compte-outline">Mon compte</a>
+    {% endif %}
+    <a href="{{ url_for('rdv') }}">
+        <button class="btn-rdv">Prendre RDV</button>
+    </a>
+</div>
 
     </div>
     <!-- Red decorative separator line below the header -->

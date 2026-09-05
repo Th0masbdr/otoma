@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ============================================================
+     CUSTOMER ACCOUNT PAGE
+     Displays favorites, requests (rdv, caution, sell)
+     ============================================================ -->
+
+<section class="compte-hero">
+    <div class="compte-hero-content">
+        <p class="compte-hero-label">OTOMA — Espace client</p>
+        <h1 class="compte-hero-title">Bonjour, {{ user.prenom }}</h1>
+        <p class="compte-hero-sub">Retrouvez vos favoris et suivez vos demandes.</p>
+    </div>
+    <a href="{{ url_for('logout') }}" class="compte-logout">Se déconnecter</a>
+</section>
+
+<section class="compte-section">
+
+    <!-- FAVORIS -->
+    <div class="compte-block">
+        <h2 class="compte-block-title">Mes véhicules favoris</h2>
+
+        {% if fav_cars %}
+        <div class="compte-cars-grid">
+            {% for car in fav_cars %}
+            <div class="car-card" onclick="window.location.href='/car/{{ car.id }}'">
+                <div class="car-img">
+                    <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
+                    <span class="car-type-badge" style="background:
+                        {% if car.type == 'SUV' %}#2F6B4A
+                        {% elif car.type == 'Sportive' %}#A63A3A
+                        {% elif car.type == 'Berline' %}#2F4A6B
+                        {% elif car.type == 'Coupé' %}#6B4A2F
+                        {% else %}#555{% endif %}
+                    ">{{ car.type }}</span>
+                </div>
+                <div class="car-card-body">
+                    <p class="car-card-brand">{{ car.brand }}</p>
+                    <h3 class="car-title">{{ car.model }}</h3>
+                    <p class="car-version">{{ car.modelVersion or "" }}</p>
+                    <div class="car-card-footer">
+                        <span class="car-price-tag">{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</span>
+                        <span class="car-card-cta">Voir</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="compte-empty">Vous n'avez pas encore de véhicule en favori.</p>
+        {% endif %}
+    </div>
+
+    <!-- DEMANDES -->
+    <div class="compte-block">
+        <h2 class="compte-block-title">Mes demandes</h2>
+
+        {% if demandes %}
+        <div class="compte-demandes">
+            {% for d in demandes %}
+            <div class="demande-card">
+                <div class="demande-type">
+                    {% if d.type == 'rdv' %}Prise de rendez-vous
+                    {% elif d.type == 'caution' %}Réservation avec caution
+                    {% elif d.type == 'vente' %}Demande de vente
+                    {% elif d.type == 'essai' %}Réservation d'essai
+                    {% else %}{{ d.type }}{% endif %}
+                </div>
+                <div class="demande-details">
+                    {% if d.details %}
+                        {% for key, val in d.details.items() %}
+                        <span><strong>{{ key }} :</strong> {{ val }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="demande-footer">
+                    <span class="demande-date">{{ d.created_at.strftime('%d/%m/%Y') }}</span>
+                    <span class="demande-statut statut-{{ d.statut | lower | replace(' ', '-') }}">{{ d.statut }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="compte-empty">Vous n'avez pas encore effectué de demande.</p>
+        {% endif %}
+    </div>
+
+</section>
+
+{% endblock %}

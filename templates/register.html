@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ============================================================
+     REGISTER PAGE — Customer account creation
+     ============================================================ -->
+
+<section class="auth-hero">
+    <div class="auth-hero-content">
+        <p class="auth-hero-label">OTOMA — Espace client</p>
+        <h1 class="auth-hero-title">Créer un compte</h1>
+        <p class="auth-hero-sub">Accédez à vos favoris et suivez vos demandes.</p>
+    </div>
+</section>
+
+<section class="auth-section">
+    <div class="auth-card">
+
+        <div class="auth-card-header">
+            <div class="auth-header-line"></div>
+            <h2 class="auth-card-title">Inscription</h2>
+            <div class="auth-header-line"></div>
+        </div>
+
+        <p id="auth-error" class="auth-error" style="display:none;"></p>
+
+        <form id="registerForm" class="auth-form" onsubmit="return false;">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" id="prenom" placeholder="Jean" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="nom" placeholder="Dupont" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Adresse e-mail</label>
+                <input type="email" id="email" placeholder="jean.dupont@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe <span class="auth-hint">(8 caractères minimum)</span></label>
+                <input type="password" id="password" placeholder="••••••••" required minlength="8">
+            </div>
+
+            <button type="button" class="auth-btn" onclick="submitRegister()">
+                Créer mon compte
+            </button>
+
+        </form>
+
+        <p class="auth-switch">
+            Déjà un compte ? <a href="{{ url_for('login') }}">Se connecter</a>
+        </p>
+
+    </div>
+</section>
+
+<script>
+async function submitRegister() {
+    const prenom   = document.getElementById('prenom').value.trim();
+    const nom      = document.getElementById('nom').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errorEl  = document.getElementById('auth-error');
+
+    if (!prenom || !nom || !email || !password) {
+        errorEl.textContent = "Tous les champs sont obligatoires.";
+        errorEl.style.display = "block";
+        return;
+    }
+
+    const res = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom, nom, email, password })
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+        errorEl.textContent = data.error;
+        errorEl.style.display = "block";
+    } else {
+        window.location.href = data.redirect;
+    }
+}
+</script>
+
+{% endblock %}

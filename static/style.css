@@ -2915,3 +2915,350 @@ footer {
 .reviews-photo:hover .reviews-photo-img {
     transform: scale(1.02);
 }
+
+/* -----------------------------------------------------------
+   AUTH PAGES (login, register)
+----------------------------------------------------------- */
+.auth-hero {
+    height: 220px;
+    background: linear-gradient(135deg, var(--graphite) 0%, #1a1010 60%, #3a1010 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.auth-hero-content { color: white; }
+
+.auth-hero-label {
+    font-size: 0.78rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.auth-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.auth-hero-sub {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.auth-section {
+    max-width: 500px;
+    margin: 50px auto 80px;
+    padding: 0 20px;
+}
+
+.auth-card {
+    background: white;
+    border-radius: 4px;
+    padding: 40px 45px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.09);
+    border-top: 3px solid var(--red);
+}
+
+.auth-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.auth-header-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--red));
+}
+
+.auth-card-header .auth-header-line:last-child {
+    background: linear-gradient(to left, transparent, var(--red));
+}
+
+.auth-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--graphite);
+    white-space: nowrap;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-btn {
+    padding: 14px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 8px;
+}
+
+.auth-btn:hover {
+    background: #8e2f2f;
+    transform: translateY(-2px);
+}
+
+.auth-error {
+    background: #fff0f0;
+    border-left: 3px solid var(--red);
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    color: var(--red);
+    margin-bottom: 16px;
+    border-radius: 2px;
+}
+
+.auth-hint {
+    font-size: 0.75rem;
+    color: #aaa;
+    font-weight: 400;
+}
+
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #888;
+}
+
+.auth-switch a {
+    color: var(--red);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+/* -----------------------------------------------------------
+   HEADER — compte buttons
+----------------------------------------------------------- */
+.btn-compte {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--graphite);
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1.5px solid var(--graphite);
+    border-radius: 2px;
+    transition: 0.25s;
+}
+
+.btn-compte:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.btn-compte-outline {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--graphite);
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1.5px solid #ccc;
+    border-radius: 2px;
+    transition: 0.25s;
+}
+
+.btn-compte-outline:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+/* -----------------------------------------------------------
+   COMPTE PAGE
+----------------------------------------------------------- */
+.compte-hero {
+    height: 220px;
+    background: linear-gradient(135deg, var(--graphite) 0%, #1a1010 60%, #3a1010 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+    position: relative;
+}
+
+.compte-hero-content { color: white; }
+
+.compte-hero-label {
+    font-size: 0.78rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.compte-hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+}
+
+.compte-hero-sub {
+    font-size: 1rem;
+    opacity: 0.7;
+    color: white;
+}
+
+.compte-logout {
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 8px 16px;
+    border-radius: 2px;
+    transition: 0.25s;
+}
+
+.compte-logout:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+.compte-section {
+    max-width: 1200px;
+    margin: 50px auto 80px;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.compte-block {}
+
+.compte-block-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--graphite);
+    margin-bottom: 30px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e8e0d5;
+}
+
+.compte-cars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.compte-empty {
+    color: #aaa;
+    font-size: 1rem;
+    font-style: italic;
+    padding: 30px 0;
+}
+
+/* Demandes */
+.compte-demandes {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.demande-card {
+    background: white;
+    border-radius: 4px;
+    padding: 24px 28px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    border-left: 3px solid var(--red);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.demande-type {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--graphite);
+}
+
+.demande-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 0.88rem;
+    color: #666;
+}
+
+.demande-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid #f0ece6;
+}
+
+.demande-date {
+    font-size: 0.82rem;
+    color: #aaa;
+}
+
+.demande-statut {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+}
+
+.statut-en-attente {
+    background: #FFF8E7;
+    color: #B8860B;
+}
+
+.statut-confirmé {
+    background: #F0FFF0;
+    color: #2F6B4A;
+}
+
+.statut-annulé {
+    background: #FFF0F0;
+    color: var(--red);
+}
+
+/* Favori button */
+.btn-favori {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background: transparent;
+    border: 1.5px solid #ccc;
+    color: #888;
+    border-radius: 2px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.25s;
+    font-family: 'Lato', sans-serif;
+}
+
+.btn-favori:hover, .btn-favori.active {
+    border-color: var(--red);
+    color: var(--red);
+}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ============================================================
+     LOGIN PAGE — Customer authentication
+     ============================================================ -->
+
+<section class="auth-hero">
+    <div class="auth-hero-content">
+        <p class="auth-hero-label">OTOMA — Espace client</p>
+        <h1 class="auth-hero-title">Se connecter</h1>
+        <p class="auth-hero-sub">Accédez à votre espace personnel.</p>
+    </div>
+</section>
+
+<section class="auth-section">
+    <div class="auth-card">
+
+        <div class="auth-card-header">
+            <div class="auth-header-line"></div>
+            <h2 class="auth-card-title">Connexion</h2>
+            <div class="auth-header-line"></div>
+        </div>
+
+        <p id="auth-error" class="auth-error" style="display:none;"></p>
+
+        <form id="loginForm" class="auth-form" onsubmit="return false;">
+
+            <div class="form-group">
+                <label>Adresse e-mail</label>
+                <input type="email" id="email" placeholder="jean.dupont@email.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mot de passe</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="button" class="auth-btn" onclick="submitLogin()">
+                Se connecter
+            </button>
+
+        </form>
+
+        <p class="auth-switch">
+            Pas encore de compte ? <a href="{{ url_for('register') }}">S'inscrire</a>
+        </p>
+
+    </div>
+</section>
+
+<script>
+async function submitLogin() {
+    const email    = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errorEl  = document.getElementById('auth-error');
+
+    const res = await fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+        errorEl.textContent = data.error;
+        errorEl.style.display = "block";
+    } else {
+        window.location.href = data.redirect;
+    }
+}
+</script>
+
+{% endblock %}

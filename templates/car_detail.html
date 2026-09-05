@@ -69,6 +69,12 @@
 
         </div>
 
+<!-- Favorite button — requires login -->
+<button class="btn-favori" id="favBtn" onclick="toggleFavori({{ car.id }})">
+    Ajouter aux favoris
+</button>
+
+
         <div class="detail-sep"></div>
 
         <!-- Selling points — no emojis, red dot via CSS -->
@@ -92,6 +98,38 @@
         <p class="detail-contact-hint">ou appelez-nous : <a href="tel:0610203040">06 10 20 30 40</a></p>
 
     </div>
+
+    <script>
+// Check if car is already in favorites on page load
+async function checkFavori() {
+    const res = await fetch('/api/favorites');
+    const favs = await res.json();
+    const btn = document.getElementById('favBtn');
+    if (favs.includes({{ car.id }})) {
+        btn.textContent = 'Retirer des favoris';
+        btn.classList.add('active');
+    }
+}
+
+async function toggleFavori(carId) {
+    const res = await fetch(`/api/favorite/${carId}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.error) {
+        window.location.href = '/login';
+        return;
+    }
+    const btn = document.getElementById('favBtn');
+    if (data.status === 'added') {
+        btn.textContent = 'Retirer des favoris';
+        btn.classList.add('active');
+    } else {
+        btn.textContent = 'Ajouter aux favoris';
+        btn.classList.remove('active');
+    }
+}
+
+checkFavori();
+</script>
 
 </section>
 
