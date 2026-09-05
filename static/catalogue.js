@@ -70,25 +70,26 @@ function renderGrid(carArray) {
         card.className = "car-card catalogue-card animate-in";
 
         // Build card HTML — no emojis, clean text only
-        card.innerHTML = `
-            <div class="car-img">
-                <img src="/static/${car.image}" alt="${car.brand} ${car.model}" loading="lazy">
-                <span class="car-type-badge" style="background:${badge.color}">${badge.label}</span>
-            </div>
-            <div class="car-card-body">
-                <h3 class="car-title">${car.brand} ${car.model}</h3>
-                <p class="car-version">${car.modelVersion || ""}</p>
-                <div class="car-card-specs">
-                    <span class="car-spec-pill">${car.hp} ch</span>
-                    <span class="car-spec-pill">${car.fuel}</span>
-                    <span class="car-spec-pill">${car.year}</span>
-                </div>
-                <div class="car-card-footer">
-                    <span class="car-price-tag">${car.price.toLocaleString('fr-FR')} €</span>
-                    <span class="car-card-cta">Voir →</span>
-                </div>
-            </div>
-        `;
+card.innerHTML = `
+    <div class="car-img">
+        <img src="/static/${car.image}" alt="${car.brand} ${car.model}" loading="lazy">
+        <span class="car-type-badge" style="background:${badge.color}">${badge.label}</span>
+    </div>
+    <div class="car-card-body">
+        <p class="car-card-brand">${car.brand}</p>
+        <h3 class="car-title">${car.model}</h3>
+        <p class="car-version">${car.modelVersion || ""}</p>
+        <div class="car-card-specs">
+            <span class="car-spec-pill">${car.hp} ch</span>
+            <span class="car-spec-pill">${car.fuel}</span>
+            <span class="car-spec-pill">${car.year}</span>
+        </div>
+        <div class="car-card-footer">
+            <span class="car-price-tag">${car.price.toLocaleString('fr-FR')} €</span>
+            <span class="car-card-cta">Voir</span>
+        </div>
+    </div>
+`;
 
         // Navigate to the vehicle detail page on card click
         card.addEventListener("click", () => {

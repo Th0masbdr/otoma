@@ -220,35 +220,35 @@ def filter_cars():
 # ============================================================
 @app.route("/api/check_plate")
 def check_plate():
-    plate = request.args.get("plate", "")
-
-    # Return an error if no plate number is provided
+    plate = request.args.get("plate", "").replace(" ", "")
     if not plate:
         return jsonify({"error": "Aucune plaque fournie"}), 400
-
     try:
-        # Call the external API with the plate number
-        # API key is loaded from environment variables
         r = requests.get(
-            "https://immat-api.fr/api/vehicles",
-            params={"plate": plate},
-            headers={"Authorization": f"Bearer {os.getenv('IMMAT_API_KEY')}"}
+            "https://api-plaque-immatriculation-siv.p.rapidapi.com/get-vehicule-info",
+            params={
+                "token": os.getenv("RAPIDAPI_TOKEN"),
+                "host_name": "https://apiplaqueimmatriculation.com",
+                "immatriculation": plate
+            },
+            headers={
+                "x-rapidapi-key": os.getenv("RAPIDAPI_KEY"),
+                "x-rapidapi-host": "api-plaque-immatriculation-siv.p.rapidapi.com",
+                "Content-Type": "application/json"
+            }
         )
         r.raise_for_status()
         data = r.json()
-
-        # Return only the relevant vehicle fields
         return jsonify({
-            "brand": data.get("brand"),
-            "model": data.get("model"),
-            "year": data.get("year"),
-            "fuel": data.get("fuel"),
-            "color": data.get("color"),
-            "hp": data.get("hp"),
-            "transmission": data.get("transmission")
+            "brand":        data.get("marque"),
+            "model":        data.get("modele"),
+            "year":         data.get("date_mise_en_circulation", "")[:4],
+            "fuel":         data.get("energie"),
+            "color":        data.get("couleur"),
+            "hp":           data.get("puissance_chevaux"),
+            "transmission": data.get("type_boite_vitesse"),
         })
     except Exception as e:
-        # Return the error message if the API call fails
         return jsonify({"error": str(e)}), 500
 
 # ============================================================

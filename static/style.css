@@ -517,8 +517,8 @@ footer {
 ----------------------------------------------------------- */
 .car-card {
     background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+    border-radius: 2px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.3s, box-shadow 0.3s;
@@ -527,16 +527,16 @@ footer {
 }
 
 .car-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
 }
 
 .car-img {
     position: relative;
     width: 100%;
-    height: 220px;
+    height: 210px;
     overflow: hidden;
-    background: #f5f2ee;
+    background: #f8f5f0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -547,68 +547,80 @@ footer {
     max-height: 100%;
     object-fit: contain;
     display: block;
-    transition: transform 0.5s ease;
-    padding: 10px;
+    transition: transform 0.6s ease;
+    padding: 12px;
 }
 
 .car-card:hover .car-img img {
-    transform: scale(1.06);
+    transform: scale(1.05);
 }
 
 .car-type-badge {
     position: absolute;
-    top: 12px;
-    left: 12px;
+    top: 10px;
+    left: 10px;
     color: white;
-    font-size: 0.72rem;
+    font-size: 0.65rem;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1.2px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    letter-spacing: 1.5px;
+    padding: 3px 8px;
+    border-radius: 1px;
 }
 
 .car-card-body {
-    padding: 16px 18px 18px;
+    padding: 18px 20px 20px;
     display: flex;
     flex-direction: column;
     flex: 1;
-    gap: 6px;
+    gap: 3px;
+}
+
+/* Brand name above model */
+.car-card-brand {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 700;
+    margin: 0;
 }
 
 .car-title {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--graphite);
     font-family: 'Playfair Display', serif;
     margin: 0;
+    line-height: 1.2;
 }
 
 .car-version {
-    font-size: 0.85rem;
-    color: #999;
+    font-size: 0.8rem;
+    color: #bbb;
     font-weight: 400;
-    margin: 0;
-    min-height: 18px;
+    margin: 0 0 10px 0;
+    min-height: 16px;
 }
 
+/* Specs — no emojis, clean pills */
 .car-card-specs {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 5px;
+    margin-bottom: 12px;
 }
 
 .car-spec-pill {
-    background: var(--cream);
-    color: var(--graphite);
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 4px 10px;
-    border-radius: 20px;
+    background: transparent;
+    color: #888;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 1px;
     border: 1px solid #e8e0d5;
     white-space: nowrap;
+    letter-spacing: 0.3px;
 }
 
 .car-card-footer {
@@ -616,29 +628,28 @@ footer {
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
-    padding-top: 12px;
+    padding-top: 14px;
     border-top: 1px solid #f0ece6;
 }
 
 .car-price-tag {
-    font-size: 1.2rem;
-    font-weight: 900;
-    color: var(--red);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--graphite);
     font-family: 'Playfair Display', serif;
 }
 
 .car-card-cta {
-    font-size: 0.85rem;
+    font-size: 0.7rem;
     font-weight: 700;
     color: var(--red);
-    letter-spacing: 0.5px;
-    transition: letter-spacing 0.25s, opacity 0.25s;
-    opacity: 0.7;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: letter-spacing 0.3s;
 }
 
 .car-card:hover .car-card-cta {
-    letter-spacing: 2px;
-    opacity: 1;
+    letter-spacing: 4px;
 }
 
 /* -----------------------------------------------------------
@@ -807,48 +818,50 @@ footer {
 /* -----------------------------------------------------------
    PAGE DETAIL VOITURE
 ----------------------------------------------------------- */
+/* -----------------------------------------------------------
+   PAGE DETAIL VOITURE
+----------------------------------------------------------- */
 .detail-body {
     max-width: 1280px;
     margin: 60px auto;
     padding: 0 40px;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    gap: 70px;
     align-items: start;
 }
 
-/* Vehicle image container with shine hover effect */
+/* Image container */
 .detail-main-img-wrap {
     position: relative;
-    border-radius: 20px;
+    border-radius: 4px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
-    background: #f0ece6;
+    background: #f8f5f0;
 }
 
 .detail-main-img {
     width: 100%;
-    height: 420px;
+    height: 460px;
     object-fit: contain;
     display: block;
-    transition: transform 0.6s ease;
-    padding: 20px;
+    transition: transform 0.8s ease;
+    padding: 30px;
 }
 
 .detail-main-img-wrap:hover .detail-main-img {
-    transform: scale(1.04);
+    transform: scale(1.03);
 }
 
-/* Decorative shine overlay that sweeps across on hover */
+/* Shine effect */
 .detail-img-shine {
     position: absolute;
     top: -50%;
     left: -60%;
     width: 40%;
     height: 200%;
-    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
     transform: skewX(-15deg);
-    transition: left 0.8s ease;
+    transition: left 1s ease;
     pointer-events: none;
 }
 
@@ -856,42 +869,216 @@ footer {
     left: 130%;
 }
 
-/* Vehicle name and year badge row */
+/* Brand label above the name */
+.detail-brand-label {
+    font-size: 0.78rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+/* Version subtitle */
+.detail-version-label {
+    font-size: 0.95rem;
+    color: #999;
+    margin-bottom: 20px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* Title block */
 .detail-title-block {
     display: flex;
     align-items: center;
     gap: 16px;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     flex-wrap: wrap;
 }
 
 .detail-name {
     font-family: 'Playfair Display', serif;
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: var(--graphite);
-}
-
-/* Year displayed as a pill badge with red border */
-.detail-year-tag {
-    background: var(--cream);
-    border: 2px solid var(--red);
-    color: var(--red);
-    font-weight: 700;
-    font-size: 1rem;
-    padding: 4px 14px;
-    border-radius: 30px;
-    letter-spacing: 1px;
-}
-
-/* Price in large Playfair Display red */
-.detail-price-main {
-    font-family: 'Playfair Display', serif;
     font-size: 2.6rem;
     font-weight: 700;
+    color: var(--graphite);
+    line-height: 1.1;
+}
+
+.detail-year-tag {
+    background: transparent;
+    border: 1.5px solid var(--red);
     color: var(--red);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 3px 12px;
+    border-radius: 2px;
+    letter-spacing: 2px;
+}
+
+/* Price */
+.detail-price-main {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--red);
+    margin-bottom: 36px;
+    letter-spacing: 0.5px;
+}
+
+/* Specs grid — 2 columns, no icons, clean typography */
+.detail-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
     margin-bottom: 32px;
-    letter-spacing: 1px;
+    border-top: 1px solid #e8e0d5;
+}
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 16px 0;
+    border-bottom: 1px solid #e8e0d5;
+}
+
+.spec-item:nth-child(odd) {
+    padding-right: 24px;
+    border-right: 1px solid #e8e0d5;
+}
+
+.spec-item:nth-child(even) {
+    padding-left: 24px;
+}
+
+.spec-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #aaa;
+    font-weight: 600;
+}
+
+.spec-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--graphite);
+    font-family: 'Playfair Display', serif;
+}
+
+/* Separator */
+.detail-sep {
+    height: 1px;
+    background: #e8e0d5;
+    margin-bottom: 24px;
+}
+
+/* Selling points */
+.detail-selling-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+}
+
+.detail-selling-points li {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 400;
+    padding-left: 14px;
+    position: relative;
+}
+
+.detail-selling-points li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    background: var(--red);
+    border-radius: 50%;
+}
+
+/* CTA buttons */
+.detail-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 32px;
+    background: var(--graphite);
+    color: white;
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.3s;
+    width: 100%;
+    justify-content: center;
+}
+
+.detail-cta:hover {
+    background: var(--red);
+    transform: translateY(-2px);
+}
+
+.detail-cta svg {
+    transition: transform 0.3s;
+}
+
+.detail-cta:hover svg {
+    transform: translateX(5px);
+}
+
+.detail-cta-mobile { display: none; }
+
+/* Reservation button */
+.detail-cta-caution {
+    display: block;
+    margin-top: 12px;
+    padding: 15px 32px;
+    background: transparent;
+    border: 1.5px solid var(--red);
+    color: var(--red);
+    border-radius: 2px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.detail-cta-caution:hover {
+    background: var(--red);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Contact hint */
+.detail-contact-hint {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #aaa;
+    letter-spacing: 0.5px;
+}
+
+.detail-contact-hint a {
+    color: var(--graphite);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.detail-contact-hint a:hover {
+    color: var(--red);
 }
 
 /* ============================================================

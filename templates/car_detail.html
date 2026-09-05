@@ -4,7 +4,6 @@
 <!-- ============================================================
      CAR DETAIL PAGE
      Displays full information about a single vehicle
-     Data is passed from the Flask route /car/<car_id>
      ============================================================ -->
 
 <section class="detail-body">
@@ -13,78 +12,66 @@
     <div class="detail-left">
         <div class="detail-main-img-wrap">
             <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" class="detail-main-img">
-            <!-- Decorative shine overlay animated on hover -->
             <div class="detail-img-shine"></div>
         </div>
-
-        <!-- Test drive button — visible on mobile only -->
         <a href="/test_drive" class="detail-cta detail-cta-mobile" style="margin-top:16px;">
             <span>Réserver un essai</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
     </div>
 
-    <!-- RIGHT COLUMN — Vehicle information and action buttons -->
+    <!-- RIGHT COLUMN — Vehicle information -->
     <div class="detail-right">
 
-        <!-- Vehicle name and year badge -->
+        <!-- Brand label + name + year -->
+        <p class="detail-brand-label">{{ car.brand }}</p>
         <div class="detail-title-block">
-            <h2 class="detail-name">{{ car.brand }} {{ car.model }}</h2>
+            <h2 class="detail-name">{{ car.model }}</h2>
             <span class="detail-year-tag">{{ car.year }}</span>
         </div>
+        <p class="detail-version-label">{{ car.modelVersion or "" }}</p>
 
-        <!-- Vehicle price formatted with spaces as thousands separator -->
+        <!-- Price -->
         <p class="detail-price-main">{{ "{:,.0f}".format(car.price).replace(",", " ") }} €</p>
 
-        <!-- ============================================================
-             SPECS GRID
-             Two-column layout with label on top and value below
-             No emojis — clean typographic approach
-             ============================================================ -->
+        <!-- Specs grid — no emojis, typographic approach -->
         <div class="detail-specs">
 
-            <!-- Horsepower -->
             <div class="spec-item">
                 <span class="spec-label">Puissance</span>
                 <span class="spec-value">{{ car.hp }} ch</span>
             </div>
 
-            <!-- Mileage -->
             <div class="spec-item">
                 <span class="spec-label">Kilométrage</span>
                 <span class="spec-value">{{ "{:,.0f}".format(car.km).replace(",", " ") }} km</span>
             </div>
 
-            <!-- Fuel type -->
             <div class="spec-item">
                 <span class="spec-label">Carburant</span>
                 <span class="spec-value">{{ car.fuel }}</span>
             </div>
 
-            <!-- Transmission type -->
             <div class="spec-item">
                 <span class="spec-label">Transmission</span>
                 <span class="spec-value">{{ car.transmission }}</span>
             </div>
 
-            <!-- Exterior color -->
             <div class="spec-item">
                 <span class="spec-label">Couleur</span>
                 <span class="spec-value">{{ car.color }}</span>
             </div>
 
-            <!-- Model version — displays a dash if not available -->
             <div class="spec-item">
                 <span class="spec-label">Version</span>
-                <span class="spec-value">{{ car.modelVersion or "—" }}</span>
+                <span class="spec-value">{{ car.modelVersion or "N/A" }}</span>
             </div>
 
         </div>
 
-        <!-- Visual separator line -->
         <div class="detail-sep"></div>
 
-        <!-- Trust indicators / selling points -->
+        <!-- Selling points — no emojis, red dot via CSS -->
         <ul class="detail-selling-points">
             <li>Véhicule inspecté et certifié OTOMA</li>
             <li>Historique complet disponible</li>
@@ -92,18 +79,16 @@
             <li>Livraison partout en Europe</li>
         </ul>
 
-        <!-- Test drive button — visible on desktop only -->
+        <!-- CTAs -->
         <a href="/test_drive" class="detail-cta detail-cta-desktop">
             <span>Réserver un essai</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
 
-        <!-- Reservation button with 5% deposit amount -->
         <a href="/reservation/{{ car.id }}" class="detail-cta-caution">
-            Réserver ce véhicule — Caution {{ "{:,.0f}".format((car.price * 0.05) | int).replace(",", " ") }} €
+            Réserver ce véhicule &nbsp;&mdash;&nbsp; Caution {{ "{:,.0f}".format((car.price * 0.05) | int).replace(",", " ") }} €
         </a>
 
-        <!-- Phone contact fallback -->
         <p class="detail-contact-hint">ou appelez-nous : <a href="tel:0610203040">06 10 20 30 40</a></p>
 
     </div>
