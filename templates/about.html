@@ -4,16 +4,14 @@
 <!-- ============================================================
      ABOUT PAGE
      Presents OTOMA's history, values, services and location
-     Includes a night parking photo embedded inside the content card
+     Includes a night parking photo at the top of the content card
      Static content — no data passed from Flask
      ============================================================ -->
 
 <section class="page-section" style="padding: 60px 20px;">
 
-    <!-- Page title -->
     <h1 class="page-title" style="text-align:center; margin-bottom:40px;">À propos d'OTOMA</h1>
 
-    <!-- Main content card -->
     <div class="page-text" style="
         text-align:left;
         max-width:900px;
@@ -26,7 +24,16 @@
         box-shadow:0 5px 18px rgba(0,0,0,0.10);
     ">
 
-        <!-- Introduction — who OTOMA is and where it is located -->
+        <!-- Night parking photo — displayed at the top of the card
+             Gives an immediate visual impression of the dealership -->
+        <div style="margin: 0 0 36px 0; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.15);">
+            <img
+                src="{{ url_for('static', filename='photo_parkingnuit.png') }}"
+                alt="Parking OTOMA de nuit"
+                style="width:100%; height:320px; object-fit:cover; display:block;">
+        </div>
+
+        <!-- Introduction -->
         <p style="margin-bottom:28px;">
             OTOMA est une concession automobile indépendante implantée à Chartres, à moins d'une heure de Paris,
             spécialisée dans la sélection, la vente et la recherche de véhicules de luxe, sportifs et hautes performances.
@@ -34,7 +41,7 @@
             proposer à chaque client une expérience à la hauteur des véhicules que nous représentons.
         </p>
 
-        <!-- Section — vehicle selection and quality standards -->
+        <!-- Vehicle selection -->
         <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:12px; margin-top:36px;">Notre sélection</h2>
         <p style="margin-bottom:28px;">
             Chaque véhicule intégrant notre stock est rigoureusement inspecté, documenté et certifié avant d'être
@@ -43,7 +50,7 @@
             véhicule est disponible sur simple demande, pour que vous puissiez vous engager en toute confiance.
         </p>
 
-        <!-- Section — personalized customer approach -->
+        <!-- Customer approach -->
         <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:12px; margin-top:36px;">Notre approche</h2>
         <p style="margin-bottom:28px;">
             Chez OTOMA, vous n'êtes pas un client parmi d'autres. Dès votre premier contact, un conseiller dédié
@@ -52,7 +59,7 @@
             parce que l'achat d'un véhicule d'exception mérite une attention sans faille.
         </p>
 
-        <!-- Section — full range of services offered -->
+        <!-- Services -->
         <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:12px; margin-top:36px;">Nos services</h2>
         <p style="margin-bottom:28px;">
             Au-delà de la vente, OTOMA propose un ensemble de services pensés pour simplifier votre expérience.
@@ -62,7 +69,7 @@
             Nous livrons votre acquisition directement à votre domicile, partout en France, dans les meilleures conditions.
         </p>
 
-        <!-- Section — track record and credibility -->
+        <!-- Track record -->
         <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:12px; margin-top:36px;">Notre légitimité</h2>
         <p style="margin-bottom:28px;">
             Avec plus de 400 véhicules vendus, 15 ans d'expérience dans l'univers du prestige automobile et 96 %
@@ -71,7 +78,7 @@
             du service — des valeurs qui guident chacune de nos décisions.
         </p>
 
-        <!-- Section — showroom location and opening conditions -->
+        <!-- Location -->
         <h2 style="font-family:'Playfair Display',serif; font-size:1.4rem; margin-bottom:12px; margin-top:36px;">Où nous trouver</h2>
         <p style="margin-bottom:28px;">
             Notre showroom est situé à Chartres, en Eure-et-Loir, facilement accessible depuis l'Île-de-France
@@ -79,17 +86,7 @@
             pensé pour que la découverte de nos véhicules soit, en elle-même, une expérience.
         </p>
 
-        <!-- Night parking photo — full width inside the content card
-             Placed before the closing quote to break up the text
-             and give a visual impression of the dealership at night -->
-        <div style="margin: 36px 0; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.15);">
-            <img
-                src="{{ url_for('static', filename='photo_showroom.png') }}"
-                alt="Parking OTOMA de nuit"
-                style="width:100%; height:320px; object-fit:cover; display:block;">
-        </div>
-
-        <!-- Closing quote — call to action styled as a highlighted blockquote -->
+        <!-- Closing quote -->
         <p style="margin-top:36px; padding:22px 28px; background:var(--cream); border-left:4px solid var(--red); border-radius:8px; font-style:italic; line-height:1.8;">
             Que vous soyez à la recherche de votre première sportive de prestige ou d'une pièce rare pour compléter
             une collection, OTOMA est l'interlocuteur qu'il vous faut. Venez nous rencontrer —
