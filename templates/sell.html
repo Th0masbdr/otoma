@@ -149,18 +149,38 @@ checkPlateBtn.addEventListener("click", async () => {
 // Shows a success message — real backend submission to be added later
 // ============================================================
 sellForm.addEventListener("submit", async (e) => {
-    // Prevent the default HTML form submission
     e.preventDefault();
 
-    // Block submission if the GDPR consent checkbox is not checked
+    // Check GDPR consent
     if (!document.getElementById("consent").checked) {
         sellMessage.textContent = "Vous devez accepter que OTOMA stocke vos données.";
         sellMessage.style.color = "red";
         return;
     }
 
-    // Show a success message to the user
-    // Real backend submission (email, database) to be implemented later
+    // Save request to MongoDB if user is logged in
+    try {
+        await fetch('/api/save_request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'vente',
+                details: {
+                    'Marque': document.getElementById('brand')?.value || infoBrand.textContent,
+                    'Modele': document.getElementById('model')?.value || infoModel.textContent,
+                    'Annee': document.getElementById('year')?.value || infoYear.textContent,
+                    'Kilometrage': document.getElementById('km').value + ' km',
+                    'Prix souhaite': document.getElementById('price').value + ' €',
+                    'Email': document.getElementById('email').value,
+                    'Telephone': document.getElementById('phone').value,
+                }
+            })
+        });
+    } catch(e) {
+        console.log('Request not saved:', e);
+    }
+
+    // Show success message
     sellMessage.style.color = "green";
     sellMessage.textContent = "Demande envoyée ! Nous vous contacterons rapidement.";
 });

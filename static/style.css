@@ -3084,20 +3084,22 @@ footer {
 /* -----------------------------------------------------------
    COMPTE PAGE
 ----------------------------------------------------------- */
+/* -----------------------------------------------------------
+   COMPTE PAGE
+----------------------------------------------------------- */
 .compte-hero {
-    height: 220px;
+    height: 200px;
     background: linear-gradient(135deg, var(--graphite) 0%, #1a1010 60%, #3a1010 100%);
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 60px;
-    position: relative;
 }
 
-.compte-hero-content { color: white; }
+.compte-hero-left { color: white; }
 
 .compte-hero-label {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     letter-spacing: 4px;
     text-transform: uppercase;
     color: var(--red);
@@ -3107,137 +3109,357 @@ footer {
 
 .compte-hero-title {
     font-family: 'Playfair Display', serif;
-    font-size: 2.4rem;
+    font-size: 2.2rem;
     font-weight: 700;
     color: white;
     margin-bottom: 6px;
 }
 
 .compte-hero-sub {
-    font-size: 1rem;
-    opacity: 0.7;
+    font-size: 0.85rem;
+    opacity: 0.5;
     color: white;
+    letter-spacing: 1px;
 }
 
 .compte-logout {
     color: white;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
     text-decoration: none;
-    border: 1px solid rgba(255,255,255,0.4);
-    padding: 8px 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 10px 20px;
     border-radius: 2px;
     transition: 0.25s;
 }
 
 .compte-logout:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.6);
 }
 
-.compte-section {
-    max-width: 1200px;
-    margin: 50px auto 80px;
-    padding: 0 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 60px;
-}
-
-.compte-block {}
-
-.compte-block-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--graphite);
-    margin-bottom: 30px;
-    padding-bottom: 12px;
+/* Stats bar */
+.compte-stats-bar {
+    background: var(--cream);
     border-bottom: 1px solid #e8e0d5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+    padding: 24px 40px;
 }
 
-.compte-cars-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-}
-
-.compte-empty {
-    color: #aaa;
-    font-size: 1rem;
-    font-style: italic;
-    padding: 30px 0;
-}
-
-/* Demandes */
-.compte-demandes {
+.compte-stat {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    align-items: center;
+    gap: 4px;
 }
 
-.demande-card {
-    background: white;
-    border-radius: 4px;
-    padding: 24px 28px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    border-left: 3px solid var(--red);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.demande-type {
+.compte-stat-value {
     font-family: 'Playfair Display', serif;
     font-size: 1.1rem;
     font-weight: 700;
     color: var(--graphite);
 }
 
+.compte-stat-label {
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #aaa;
+    font-weight: 600;
+}
+
+.compte-stat-divider {
+    width: 1px;
+    height: 30px;
+    background: #e8e0d5;
+}
+
+/* Main section */
+.compte-section {
+    max-width: 1100px;
+    margin: 60px auto 100px;
+    padding: 0 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 70px;
+}
+
+.compte-block {}
+
+.compte-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e8e0d5;
+}
+
+.compte-block-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--graphite);
+}
+
+.compte-block-link {
+    font-size: 0.78rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-decoration: none;
+    font-weight: 700;
+    transition: letter-spacing 0.3s;
+}
+
+.compte-block-link:hover {
+    letter-spacing: 3px;
+}
+
+/* Cars grid */
+.compte-cars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* Empty state */
+.compte-empty-block {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 30px 0;
+}
+
+.compte-empty {
+    color: #bbb;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+.compte-empty-cta {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-decoration: none;
+    border-bottom: 1px solid var(--red);
+    padding-bottom: 2px;
+    transition: opacity 0.2s;
+}
+
+.compte-empty-cta:hover {
+    opacity: 0.7;
+}
+
+/* Demandes */
+.compte-demandes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.demande-card {
+    background: white;
+    border-radius: 2px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: transform 0.2s;
+}
+
+.demande-card:hover {
+    transform: translateX(4px);
+}
+
+.demande-card-left {}
+
+.demande-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--cream);
+    border: 1px solid #e8e0d5;
+    border-radius: 2px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--red);
+}
+
+.demande-card-body {
+    flex: 1;
+}
+
+.demande-type {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--graphite);
+    margin-bottom: 4px;
+}
+
 .demande-details {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    font-size: 0.88rem;
-    color: #666;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #999;
 }
 
-.demande-footer {
+.demande-card-right {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 6px;
-    padding-top: 12px;
-    border-top: 1px solid #f0ece6;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .demande-date {
-    font-size: 0.82rem;
-    color: #aaa;
+    font-size: 0.78rem;
+    color: #ccc;
+    letter-spacing: 0.5px;
 }
 
 .demande-statut {
-    font-size: 0.78rem;
+    font-size: 0.68rem;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     padding: 4px 10px;
     border-radius: 2px;
 }
 
-.statut-en-attente {
-    background: #FFF8E7;
-    color: #B8860B;
+.statut-en-attente { background: #FFF8E7; color: #B8860B; }
+.statut-confirmé   { background: #F0FFF0; color: #2F6B4A; }
+.statut-annulé     { background: #FFF0F0; color: var(--red); }
+
+/* Danger zone */
+.compte-danger {
+    border-top: 1px solid #f0e8e8;
+    padding-top: 40px;
 }
 
-.statut-confirmé {
-    background: #F0FFF0;
-    color: #2F6B4A;
+.compte-danger-title {
+    color: #cc4444 !important;
 }
 
-.statut-annulé {
-    background: #FFF0F0;
-    color: var(--red);
+.compte-danger-text {
+    font-size: 0.9rem;
+    color: #999;
+    margin-bottom: 20px;
+    max-width: 500px;
+}
+
+.btn-delete-account {
+    padding: 11px 24px;
+    background: transparent;
+    border: 1.5px solid #cc4444;
+    color: #cc4444;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.25s;
+    font-family: 'Lato', sans-serif;
+}
+
+.btn-delete-account:hover {
+    background: #cc4444;
+    color: white;
+}
+
+/* Delete confirmation modal */
+.delete-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(4px);
+}
+
+.delete-modal-card {
+    background: white;
+    border-radius: 4px;
+    padding: 40px 48px;
+    max-width: 480px;
+    width: 90%;
+    border-top: 3px solid #cc4444;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.delete-modal-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+    color: var(--graphite);
+}
+
+.delete-modal-card p {
+    font-size: 0.9rem;
+    color: #888;
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.delete-modal-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.delete-modal-cancel {
+    flex: 1;
+    padding: 12px;
+    background: transparent;
+    border: 1.5px solid #ccc;
+    color: #888;
+    border-radius: 2px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: 'Lato', sans-serif;
+}
+
+.delete-modal-cancel:hover {
+    border-color: var(--graphite);
+    color: var(--graphite);
+}
+
+.delete-modal-confirm {
+    flex: 1;
+    padding: 12px;
+    background: #cc4444;
+    border: none;
+    color: white;
+    border-radius: 2px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: 'Lato', sans-serif;
+}
+
+.delete-modal-confirm:hover {
+    background: #aa2222;
 }
 
 /* Favori button */
@@ -3246,19 +3468,120 @@ footer {
     padding: 12px;
     margin-top: 10px;
     background: transparent;
-    border: 1.5px solid #ccc;
-    color: #888;
+    border: 1.5px solid #e8e0d5;
+    color: #bbb;
     border-radius: 2px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 1px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
     transition: 0.25s;
     font-family: 'Lato', sans-serif;
 }
 
-.btn-favori:hover, .btn-favori.active {
+.btn-favori:hover {
     border-color: var(--red);
     color: var(--red);
+}
+
+.btn-favori.active {
+    border-color: var(--red);
+    color: var(--red);
+    background: #fff5f5;
+}
+
+/* Mon compte button in header */
+.btn-compte {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--graphite);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1.5px solid var(--graphite);
+    border-radius: 2px;
+    transition: 0.25s;
+}
+
+.btn-compte:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.btn-compte-outline {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--graphite);
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 1.5px solid #ccc;
+    border-radius: 2px;
+    transition: 0.25s;
+}
+
+.btn-compte-outline:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+
+/* -----------------------------------------------------------
+   COMPTE — Edit forms
+----------------------------------------------------------- */
+.compte-edit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.compte-edit-card {
+    background: white;
+    border-radius: 2px;
+    padding: 28px 30px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border-top: 2px solid var(--red);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.compte-edit-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--graphite);
+    margin-bottom: 4px;
+}
+
+.compte-edit-btn {
+    padding: 11px;
+    background: var(--graphite);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s;
+    font-family: 'Lato', sans-serif;
+    margin-top: 6px;
+}
+
+.compte-edit-btn:hover {
+    background: var(--red);
+}
+
+.auth-success {
+    background: #f0fff0;
+    border-left: 3px solid #2F6B4A;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    color: #2F6B4A;
+    border-radius: 2px;
 }

@@ -3,23 +3,47 @@
 
 <!-- ============================================================
      CUSTOMER ACCOUNT PAGE
-     Displays favorites, requests (rdv, caution, sell)
+     Displays user info, favorites, requests and account deletion
      ============================================================ -->
 
+<!-- Hero with user info -->
 <section class="compte-hero">
-    <div class="compte-hero-content">
+    <div class="compte-hero-left">
         <p class="compte-hero-label">OTOMA — Espace client</p>
-        <h1 class="compte-hero-title">Bonjour, {{ user.prenom }}</h1>
-        <p class="compte-hero-sub">Retrouvez vos favoris et suivez vos demandes.</p>
+        <h1 class="compte-hero-title">Bonjour, {{ user.prenom }} {{ user.nom }}</h1>
+        <p class="compte-hero-sub">Membre depuis le {{ user.created_at.strftime('%d/%m/%Y') }}</p>
     </div>
-    <a href="{{ url_for('logout') }}" class="compte-logout">Se déconnecter</a>
+    <div class="compte-hero-right">
+        <a href="{{ url_for('logout') }}" class="compte-logout">Se déconnecter</a>
+    </div>
 </section>
+
+<!-- Stats bar -->
+<div class="compte-stats-bar">
+    <div class="compte-stat">
+        <span class="compte-stat-value">{{ fav_cars | length }}</span>
+        <span class="compte-stat-label">Véhicule{{ 's' if fav_cars | length > 1 else '' }} en favori</span>
+    </div>
+    <div class="compte-stat-divider"></div>
+    <div class="compte-stat">
+        <span class="compte-stat-value">{{ demandes | length }}</span>
+        <span class="compte-stat-label">Demande{{ 's' if demandes | length > 1 else '' }} effectuée{{ 's' if demandes | length > 1 else '' }}</span>
+    </div>
+    <div class="compte-stat-divider"></div>
+    <div class="compte-stat">
+        <span class="compte-stat-value">{{ user.email }}</span>
+        <span class="compte-stat-label">Adresse e-mail</span>
+    </div>
+</div>
 
 <section class="compte-section">
 
     <!-- FAVORIS -->
-    <div class="compte-block">
-        <h2 class="compte-block-title">Mes véhicules favoris</h2>
+    <div class="compte-block animate-in">
+        <div class="compte-block-header">
+            <h2 class="compte-block-title">Mes véhicules favoris</h2>
+            <a href="{{ url_for('catalogue') }}" class="compte-block-link">Voir le catalogue</a>
+        </div>
 
         {% if fav_cars %}
         <div class="compte-cars-grid">
@@ -48,33 +72,45 @@
             {% endfor %}
         </div>
         {% else %}
-        <p class="compte-empty">Vous n'avez pas encore de véhicule en favori.</p>
+        <div class="compte-empty-block">
+            <p class="compte-empty">Vous n'avez pas encore de véhicule en favori.</p>
+            <a href="{{ url_for('catalogue') }}" class="compte-empty-cta">Parcourir le catalogue</a>
+        </div>
         {% endif %}
     </div>
 
     <!-- DEMANDES -->
-    <div class="compte-block">
-        <h2 class="compte-block-title">Mes demandes</h2>
+    <div class="compte-block animate-in">
+        <div class="compte-block-header">
+            <h2 class="compte-block-title">Mes demandes</h2>
+        </div>
 
         {% if demandes %}
         <div class="compte-demandes">
             {% for d in demandes %}
             <div class="demande-card">
-                <div class="demande-type">
-                    {% if d.type == 'rdv' %}Prise de rendez-vous
-                    {% elif d.type == 'caution' %}Réservation avec caution
-                    {% elif d.type == 'vente' %}Demande de vente
-                    {% elif d.type == 'essai' %}Réservation d'essai
-                    {% else %}{{ d.type }}{% endif %}
+                <div class="demande-card-left">
+                    <span class="demande-icon">
+                            {% if d.type == 'caution' %}RES
+                            {% elif d.type == 'vente' %}VTE
+                            {% else %}REQ{% endif %}
+                    </span>
                 </div>
-                <div class="demande-details">
+                <div class="demande-card-body">
+                    <p class="demande-type">
+                            {% if d.type == 'caution' %}Réservation avec caution
+                            {% elif d.type == 'vente' %}Demande de vente
+                            {% else %}{{ d.type }}{% endif %}
+                    </p>
                     {% if d.details %}
+                    <div class="demande-details">
                         {% for key, val in d.details.items() %}
-                        <span><strong>{{ key }} :</strong> {{ val }}</span>
+                        <span><strong>{{ key }}</strong> {{ val }}</span>
                         {% endfor %}
+                    </div>
                     {% endif %}
                 </div>
-                <div class="demande-footer">
+                <div class="demande-card-right">
                     <span class="demande-date">{{ d.created_at.strftime('%d/%m/%Y') }}</span>
                     <span class="demande-statut statut-{{ d.statut | lower | replace(' ', '-') }}">{{ d.statut }}</span>
                 </div>
@@ -82,10 +118,168 @@
             {% endfor %}
         </div>
         {% else %}
-        <p class="compte-empty">Vous n'avez pas encore effectué de demande.</p>
+        <div class="compte-empty-block">
+            <p class="compte-empty">Vous n'avez pas encore effectué de demande.</p>
+            <a href="{{ url_for('catalogue') }}" class="compte-empty-cta">Prendre rendez-vous</a>
+        </div>
         {% endif %}
     </div>
 
+
+    <!-- MODIFIER MES INFORMATIONS -->
+<div class="compte-block animate-in">
+    <div class="compte-block-header">
+        <h2 class="compte-block-title">Mes informations</h2>
+    </div>
+
+    <!-- Edit info form -->
+    <div class="compte-edit-grid">
+
+        <div class="compte-edit-card">
+            <h3 class="compte-edit-title">Informations personnelles</h3>
+            <p id="info-error" class="auth-error" style="display:none;"></p>
+            <p id="info-success" class="auth-success" style="display:none;">Informations mises à jour.</p>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" id="edit-prenom" value="{{ user.prenom }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" id="edit-nom" value="{{ user.nom }}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Adresse e-mail</label>
+                <input type="email" id="edit-email" value="{{ user.email }}" required>
+            </div>
+            <button class="compte-edit-btn" onclick="updateInfo()">Enregistrer</button>
+        </div>
+
+        <div class="compte-edit-card">
+            <h3 class="compte-edit-title">Modifier le mot de passe</h3>
+            <p id="pwd-error" class="auth-error" style="display:none;"></p>
+            <p id="pwd-success" class="auth-success" style="display:none;">Mot de passe mis à jour.</p>
+
+            <div class="form-group">
+                <label>Mot de passe actuel</label>
+                <input type="password" id="current-pwd" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+                <label>Nouveau mot de passe <span class="auth-hint">(8 caractères minimum)</span></label>
+                <input type="password" id="new-pwd" placeholder="••••••••" minlength="8">
+            </div>
+            <button class="compte-edit-btn" onclick="updatePassword()">Modifier</button>
+        </div>
+
+    </div>
+</div>
+
+    <!-- DANGER ZONE -->
+    <div class="compte-block compte-danger animate-in">
+        <div class="compte-block-header">
+            <h2 class="compte-block-title compte-danger-title">Zone de gestion</h2>
+        </div>
+        <p class="compte-danger-text">La suppression de votre compte est définitive. Toutes vos données (favoris, demandes) seront effacées.</p>
+        <button class="btn-delete-account" onclick="confirmDelete()">
+            Supprimer mon compte
+        </button>
+    </div>
+
 </section>
+
+<!-- Confirmation modal -->
+<div class="delete-modal" id="deleteModal" style="display:none;">
+    <div class="delete-modal-card">
+        <h3>Confirmer la suppression</h3>
+        <p>Cette action est irréversible. Votre compte et toutes vos données seront définitivement supprimés.</p>
+        <div class="delete-modal-actions">
+            <button class="delete-modal-cancel" onclick="document.getElementById('deleteModal').style.display='none'">Annuler</button>
+            <button class="delete-modal-confirm" onclick="deleteAccount()">Confirmer la suppression</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show confirmation modal before deleting account
+function confirmDelete() {
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+// Send delete request to Flask
+async function deleteAccount() {
+    const res = await fetch('/delete_account', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+        window.location.href = '/';
+    }
+}
+</script>
+
+<script>
+// Update personal information
+async function updateInfo() {
+    const prenom = document.getElementById('edit-prenom').value.trim();
+    const nom    = document.getElementById('edit-nom').value.trim();
+    const email  = document.getElementById('edit-email').value.trim();
+    const errEl  = document.getElementById('info-error');
+    const sucEl  = document.getElementById('info-success');
+
+    const res  = await fetch('/api/update_account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom, nom, email })
+    });
+    const data = await res.json();
+
+    if (data.error) {
+        errEl.textContent = data.error;
+        errEl.style.display = 'block';
+        sucEl.style.display = 'none';
+    } else {
+        sucEl.style.display = 'block';
+        errEl.style.display = 'none';
+    }
+}
+
+// Update password
+async function updatePassword() {
+    const current = document.getElementById('current-pwd').value;
+    const newPwd  = document.getElementById('new-pwd').value;
+    const errEl   = document.getElementById('pwd-error');
+    const sucEl   = document.getElementById('pwd-success');
+
+    const res  = await fetch('/api/update_password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ current_password: current, new_password: newPwd })
+    });
+    const data = await res.json();
+
+    if (data.error) {
+        errEl.textContent = data.error;
+        errEl.style.display = 'block';
+        sucEl.style.display = 'none';
+    } else {
+        sucEl.style.display = 'block';
+        errEl.style.display = 'none';
+        document.getElementById('current-pwd').value = '';
+        document.getElementById('new-pwd').value = '';
+    }
+}
+
+// Show confirmation modal before deleting account
+function confirmDelete() {
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+// Send delete request to Flask
+async function deleteAccount() {
+    const res = await fetch('/delete_account', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) window.location.href = '/';
+}
+</script>
 
 {% endblock %}

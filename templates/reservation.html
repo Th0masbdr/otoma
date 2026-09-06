@@ -287,7 +287,7 @@ document.getElementById('phone')?.addEventListener('blur', function() {
 // Shows loading screen then confirmation after 4 seconds
 // No real payment is processed — this is a simulation
 // ============================================================
-function submitReservation() {
+async function submitReservation() {
     let isValid = true;
 
     // Validate email format
@@ -303,7 +303,7 @@ function submitReservation() {
         emailInput.style.borderColor = '#2F6B4A';
     }
 
-    // Validate phone number — must contain exactly 10 digits
+    // Validate phone number
     const phoneInput = document.getElementById('phone');
     const phoneError = document.getElementById('phoneError');
     if (!validatePhone(phoneInput.value)) {
@@ -316,7 +316,7 @@ function submitReservation() {
         phoneInput.style.borderColor = '#2F6B4A';
     }
 
-    // Validate all other required text fields
+    // Validate all other required fields
     const textFields = ['firstName','lastName','address','zip','city','cardNumber','cardExpiry','cardCvv','cardName'];
     for (let id of textFields) {
         const el = document.getElementById(id);
@@ -329,20 +329,40 @@ function submitReservation() {
         }
     }
 
-    // Validate GDPR consent checkbox
+    // Validate consent checkbox
     if (!document.getElementById('consent').checked) {
         alert("Veuillez accepter les conditions de réservation.");
         isValid = false;
     }
 
-    // Stop submission if any validation failed
     if (!isValid) return;
 
-    // Hide the payment form and show the loading screen
+    // Hide form and show loading screen
     document.getElementById('payment-form-section').style.display = 'none';
     document.getElementById('payment-loading').style.display = 'flex';
 
-    // After 4 seconds, hide loading and show the confirmation screen
+    // Save request to MongoDB if user is logged in
+    try {
+        await fetch('/api/save_request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type: 'caution',
+                details: {
+                    'Véhicule': '{{ car.brand }} {{ car.model }}',
+                    'Prix': '{{ "{:,.0f}".format(car.price).replace(",", " ") }} €',
+                    'Caution': '{{ "{:,.0f}".format(deposit).replace(",", " ") }} €',
+                    'Nom': document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
+                    'Email': document.getElementById('email').value,
+                }
+            })
+        });
+    } catch(e) {
+        // Silent fail — user may not be logged in
+        console.log('Request not saved:', e);
+    }
+
+    // After 4 seconds show confirmation
     setTimeout(() => {
         document.getElementById('payment-loading').style.display = 'none';
         document.getElementById('payment-confirmation').style.display = 'flex';

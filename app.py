@@ -398,13 +398,16 @@ def logout():
 def compte():
     uid = session["user_id"]
 
-    # Favoris
+    # Favorites
     favs = list(favorites_col.find({"user_id": uid}))
     fav_car_ids = [f["car_id"] for f in favs]
     fav_cars = [c for c in cars if c["id"] in fav_car_ids]
 
-    # Demandes
-    demandes = list(requests_col.find({"user_id": uid}).sort("created_at", -1))
+    # Only caution and vente requests
+    demandes = list(requests_col.find({
+        "user_id": uid,
+        "type": {"$in": ["caution", "vente"]}
+    }).sort("created_at", -1))
 
     return render_template("compte.html",
         user=current_user(),
@@ -470,3 +473,77 @@ def save_request():
 # ============================================================
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+# ============================================================
+# DELETE ACCOUNT
+# ============================================================
+@app.route("/delete_account", methods=["POST"])
+@login_required
+def delete_account():
+    """Deletes the user account and all associated data"""
+    uid = session["user_id"]
+    users_col.delete_one({"_id": ObjectId(uid)})
+    favorites_col.delete_many({"user_id": uid})
+    requests_col.delete_many({"user_id": uid})
+    session.clear()
+    return jsonify({"success": True})
+
+
+# ============================================================
+# UPDATE ACCOUNT INFO
+# Allows the user to update their first name, last name and email
+# ============================================================
+@app.route("/api/update_account", methods=["POST"])
+@login_required
+def update_account():
+    data   = request.get_json() or {}
+    prenom = data.get("prenom", "").strip()
+    nom    = data.get("nom", "").strip()
+    email  = data.get("email", "").strip().lower()
+
+    if not all([prenom, nom, email]):
+        return jsonify({"error": "Tous les champs sont obligatoires"}), 400
+
+    if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+        return jsonify({"error": "Email invalide"}), 400
+
+    # Check email not taken by another user
+    existing = users_col.find_one({"email": email, "_id": {"$ne": ObjectId(session["user_id"])}})
+    if existing:
+        return jsonify({"error": "Cet email est déjà utilisé"}), 409
+
+    users_col.update_one(
+        {"_id": ObjectId(session["user_id"])},
+        {"$set": {"prenom": prenom, "nom": nom, "email": email}}
+    )
+    session["user_name"] = prenom
+    return jsonify({"success": True})
+
+# ============================================================
+# UPDATE PASSWORD
+# Verifies current password before updating to new one
+# ============================================================
+@app.route("/api/update_password", methods=["POST"])
+@login_required
+def update_password():
+    data        = request.get_json() or {}
+    current_pwd = data.get("current_password", "")
+    new_pwd     = data.get("new_password", "")
+
+    if len(new_pwd) < 8:
+        return jsonify({"error": "Le mot de passe doit contenir au moins 8 caractères"}), 400
+
+    user = users_col.find_one({"_id": ObjectId(session["user_id"])})
+
+    # Verify current password
+    if not bcrypt.checkpw(current_pwd.encode(), user["password"]):
+        return jsonify({"error": "Mot de passe actuel incorrect"}), 401
+
+    # Hash and save new password
+    hashed = bcrypt.hashpw(new_pwd.encode(), bcrypt.gensalt())
+    users_col.update_one(
+        {"_id": ObjectId(session["user_id"])},
+        {"$set": {"password": hashed}}
+    )
+    return jsonify({"success": True})
