@@ -42,9 +42,9 @@
         <!-- Clicking anywhere on the card navigates to the vehicle detail page -->
         <div class="car-card animate-in" onclick="window.location.href='/car/{{ car.id }}'">
 
-            <!-- Vehicle image with color-coded type badge -->
+            <!-- Vehicle image loaded from Supabase Storage -->
             <div class="car-img">
-                <img src="{{ url_for('static', filename=car.image) }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
+                <img src="{{ storage_url }}{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
 
                 <!-- Badge color changes based on vehicle type -->
                 <span class="car-type-badge" style="background:

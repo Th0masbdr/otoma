@@ -11,7 +11,7 @@
     <!-- LEFT COLUMN — Vehicle photo -->
     <div class="detail-left">
         <div class="detail-main-img-wrap">
-            <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" class="detail-main-img">
+            <img src="{{ storage_url }}{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" class="detail-main-img">
             <div class="detail-img-shine"></div>
         </div>
         <a href="/test_drive" class="detail-cta detail-cta-mobile" style="margin-top:16px;">

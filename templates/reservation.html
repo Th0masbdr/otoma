@@ -18,11 +18,11 @@
 
 <section class="reservation-body">
 
-    <!-- Vehicle summary — image, price and deposit amount -->
+    <!-- Vehicle summary — image loaded from Supabase Storage -->
     <div class="reservation-summary">
 
         <div class="reservation-car-img">
-            <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}">
+            <img src="{{ storage_url }}{{ car.image }}" alt="{{ car.brand }} {{ car.model }}">
         </div>
 
         <div class="reservation-car-info">
@@ -80,7 +80,6 @@
             <div class="form-group">
                 <label>Adresse e-mail</label>
                 <input type="email" id="email" placeholder="jean.dupont@email.com" required>
-                <!-- Error message shown if email format is invalid -->
                 <span class="field-error" id="emailError">Veuillez entrer une adresse e-mail valide (ex: nom@domaine.fr)</span>
             </div>
 
@@ -88,7 +87,6 @@
             <div class="form-group">
                 <label>Numéro de téléphone</label>
                 <input type="tel" id="phone" placeholder="06 12 34 56 78" maxlength="14" required>
-                <!-- Error message shown if phone number format is invalid -->
                 <span class="field-error" id="phoneError">Veuillez entrer un numéro de téléphone valide (10 chiffres)</span>
             </div>
 
@@ -128,7 +126,6 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>Date d'expiration</label>
-                    <!-- Auto-formatted as MM/AA by the input event listener -->
                     <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5" required>
                 </div>
                 <div class="form-group">
@@ -217,47 +214,33 @@ document.getElementById('cardExpiry')?.addEventListener('input', function() {
 // PHONE NUMBER FORMATTING
 // Auto-formats phone input with spaces every 2 digits
 // e.g. "0612345678" → "06 12 34 56 78"
-// Only allows digit input
 // ============================================================
 document.getElementById('phone')?.addEventListener('input', function() {
-    // Remove all non-digit characters
     let v = this.value.replace(/\D/g, '');
-    // Limit to 10 digits maximum
     v = v.substring(0, 10);
-    // Insert a space every 2 digits
     let formatted = v.match(/.{1,2}/g)?.join(' ') || v;
     this.value = formatted;
 });
 
 // ============================================================
 // EMAIL VALIDATION
-// Validates email format using a regex pattern
-// Shows or hides the error message accordingly
-// Returns true if valid, false otherwise
 // ============================================================
 function validateEmail(email) {
-    // Standard email regex — requires at least one @ and a domain
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
 // ============================================================
 // PHONE VALIDATION
-// Validates that the phone number contains exactly 10 digits
-// Returns true if valid, false otherwise
 // ============================================================
 function validatePhone(phone) {
-    // Strip all spaces and check for exactly 10 digits
     const digits = phone.replace(/\s/g, '');
     return /^\d{10}$/.test(digits);
 }
 
 // ============================================================
 // REAL-TIME FIELD VALIDATION
-// Shows error messages as the user types
 // ============================================================
-
-// Show email error message in real time
 document.getElementById('email')?.addEventListener('blur', function() {
     const errorEl = document.getElementById('emailError');
     if (!validateEmail(this.value)) {
@@ -269,7 +252,6 @@ document.getElementById('email')?.addEventListener('blur', function() {
     }
 });
 
-// Show phone error message in real time
 document.getElementById('phone')?.addEventListener('blur', function() {
     const errorEl = document.getElementById('phoneError');
     if (!validatePhone(this.value)) {
@@ -290,7 +272,6 @@ document.getElementById('phone')?.addEventListener('blur', function() {
 async function submitReservation() {
     let isValid = true;
 
-    // Validate email format
     const emailInput = document.getElementById('email');
     const emailError = document.getElementById('emailError');
     if (!validateEmail(emailInput.value)) {
@@ -303,7 +284,6 @@ async function submitReservation() {
         emailInput.style.borderColor = '#2F6B4A';
     }
 
-    // Validate phone number
     const phoneInput = document.getElementById('phone');
     const phoneError = document.getElementById('phoneError');
     if (!validatePhone(phoneInput.value)) {
@@ -316,7 +296,6 @@ async function submitReservation() {
         phoneInput.style.borderColor = '#2F6B4A';
     }
 
-    // Validate all other required fields
     const textFields = ['firstName','lastName','address','zip','city','cardNumber','cardExpiry','cardCvv','cardName'];
     for (let id of textFields) {
         const el = document.getElementById(id);
@@ -329,7 +308,6 @@ async function submitReservation() {
         }
     }
 
-    // Validate consent checkbox
     if (!document.getElementById('consent').checked) {
         alert("Veuillez accepter les conditions de réservation.");
         isValid = false;
@@ -337,7 +315,6 @@ async function submitReservation() {
 
     if (!isValid) return;
 
-    // Hide form and show loading screen
     document.getElementById('payment-form-section').style.display = 'none';
     document.getElementById('payment-loading').style.display = 'flex';
 
@@ -362,7 +339,6 @@ async function submitReservation() {
         console.log('Request not saved:', e);
     }
 
-    // After 4 seconds show confirmation
     setTimeout(() => {
         document.getElementById('payment-loading').style.display = 'none';
         document.getElementById('payment-confirmation').style.display = 'flex';

@@ -184,6 +184,9 @@
      Read by catalogue.js on page load to render the initial grid -->
 <script id="carsJson" type="application/json">{{ cars | tojson }}</script>
 
+<!-- Supabase Storage URL passed to catalogue.js for vehicle images -->
+<script>const STORAGE_URL = "{{ storage_url }}";</script>
+
 <!-- catalogue.js handles filtering, grid rendering and cursor refresh -->
 <script src="/static/catalogue.js"></script>
 

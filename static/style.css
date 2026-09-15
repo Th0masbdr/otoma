@@ -1225,95 +1225,435 @@ footer {
 /* -----------------------------------------------------------
    SELL PAGE
 ----------------------------------------------------------- */
-.sell-hero {
-    background: var(--cream);
-    padding: 60px 20px;
+
+/* Hero */
+.sell-hero-section {
+    height: 280px;
+    background: linear-gradient(135deg, var(--graphite) 0%, #1a1010 60%, #3a1010 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
 }
 
-.sell-title {
-    font-size: 2.8rem;
+.sell-hero-content { color: white; }
+
+.sell-hero-label {
+    font-size: 0.72rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    font-weight: 700;
+    margin-bottom: 14px;
+}
+
+.sell-hero-title {
     font-family: 'Playfair Display', serif;
+    font-size: 3rem;
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
 
-.sell-subtitle {
-    font-size: 1.3rem;
-    color: var(--graphite);
-}
-
-.sell-form {
-    max-width: 800px;
-    margin: 40px auto;
-    background: white;
-    padding: 40px 30px;
-    border-radius: 15px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.12);
-    font-size: 1.1rem;
-}
-
-.sell-form label {
-    display: block;
-    margin-top: 20px;
-    font-weight: 700;
-    color: var(--graphite);
-}
-
-.sell-form input {
-    width: 100%;
-    padding: 12px 15px;
-    margin-top: 8px;
-    border-radius: 10px;
-    border: 1px solid #ccc;
+.sell-hero-sub {
     font-size: 1rem;
+    opacity: 0.65;
+    max-width: 500px;
+    margin: auto;
+    line-height: 1.6;
 }
 
-.sell-btn {
-    display: inline-block;
-    margin-top: 25px;
-    background: var(--red);
-    color: var(--cream);
-    padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.sell-btn:hover {
-    background: #8b2f2f;
-}
-
-.car-info-display {
-    margin-top: 25px;
+/* Process steps */
+.sell-process {
     background: var(--cream);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    text-align: left;
+    border-bottom: 1px solid #e8e0d5;
+    padding: 30px 20px;
 }
 
-.car-info-display p {
-    margin: 10px 0;
+.sell-process-inner {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
 }
 
-.car-info-display span:first-child {
+.sell-process-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.sell-process-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
     font-weight: 700;
     color: var(--red);
 }
 
-.car-info-img {
-    width: 100%;
-    max-height: 300px;
-    object-fit: cover;
-    border-radius: 12px;
-    margin-top: 15px;
+.sell-process-label {
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #888;
+    font-weight: 600;
+    text-align: center;
+    max-width: 100px;
 }
 
-.additional-fields {
-    margin-top: 30px;
+.sell-process-line {
+    flex: 1;
+    height: 1px;
+    background: #e8e0d5;
+    margin: 0 20px;
+    margin-bottom: 20px;
+}
+
+/* Main section */
+.sell-section {
+    max-width: 700px;
+    margin: 50px auto 80px;
+    padding: 0 20px;
+}
+
+/* Card */
+.sell-card {
+    background: white;
+    border-radius: 2px;
+    padding: 44px 50px;
+    box-shadow: 0 5px 30px rgba(0,0,0,0.08);
+    border-top: 3px solid var(--red);
+}
+
+.sell-card-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.sell-header-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--red));
+}
+
+.sell-card-header .sell-header-line:last-child {
+    background: linear-gradient(to left, transparent, var(--red));
+}
+
+.sell-card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--graphite);
+    white-space: nowrap;
+}
+
+.sell-card-sub {
+    text-align: center;
+    font-size: 0.92rem;
+    color: #999;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+/* Plate input */
+.sell-plate-wrap {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.sell-plate-input-wrap {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--graphite);
+    border-radius: 2px;
+    overflow: hidden;
+    background: white;
+}
+
+.sell-plate-flag {
+    background: #003189;
+    color: white;
+    padding: 12px 14px;
+    font-size: 1.1rem;
+    border-right: 2px solid var(--graphite);
+}
+
+.sell-plate-input {
+    border: none;
+    outline: none;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 12px 20px;
+    width: 180px;
+    font-family: 'Lato', sans-serif;
+    color: var(--graphite);
+    text-transform: uppercase;
+    background: white;
+}
+
+.sell-plate-btn {
+    padding: 14px 28px;
+    background: var(--graphite);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s;
+    font-family: 'Lato', sans-serif;
+    white-space: nowrap;
+}
+
+.sell-plate-btn:hover {
+    background: var(--red);
+}
+
+/* Manual toggle */
+.sell-manual-toggle {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f0ece6;
+}
+
+.sell-manual-btn {
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+    text-decoration: underline;
+}
+
+.sell-manual-btn:hover {
+    color: var(--red);
+}
+
+/* Detected vehicle badge */
+.sell-vehicle-detected {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--cream);
+    border-left: 3px solid var(--red);
+    padding: 14px 18px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+}
+
+.sell-detected-badge {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: white;
+    background: var(--red);
+    padding: 4px 10px;
+    border-radius: 1px;
+    white-space: nowrap;
+}
+
+.sell-detected-info {
+    display: flex;
+    gap: 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--graphite);
+}
+
+/* Form grid */
+.sell-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sell-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.sell-form-separator {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #bbb;
+    text-align: center;
+    padding: 10px 0;
+    border-top: 1px solid #f0ece6;
+    border-bottom: 1px solid #f0ece6;
+    margin: 8px 0;
+}
+
+.sell-file-input {
+    padding: 10px 0;
+    font-size: 0.88rem;
+    color: #888;
+}
+
+.sell-consent {
+    font-size: 0.85rem;
+    color: #888;
+    line-height: 1.6;
+}
+
+.sell-consent label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.sell-consent input[type="checkbox"] {
+    margin-top: 3px;
+    flex-shrink: 0;
+    accent-color: var(--red);
+}
+
+.sell-form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.sell-back-btn {
+    padding: 13px 24px;
+    background: transparent;
+    border: 1.5px solid #ccc;
+    color: #999;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: 'Lato', sans-serif;
+}
+
+.sell-back-btn:hover {
+    border-color: var(--graphite);
+    color: var(--graphite);
+}
+
+.sell-submit-btn {
+    flex: 1;
+    padding: 14px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s, transform 0.2s;
+    font-family: 'Lato', sans-serif;
+}
+
+.sell-submit-btn:hover {
+    background: #8e2f2f;
+    transform: translateY(-2px);
+}
+
+/* Errors and loading */
+.sell-error {
+    color: var(--red);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 10px;
+    background: #fff5f5;
+    border-radius: 2px;
+}
+
+.sell-loading {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.88rem;
+    font-style: italic;
+}
+
+/* Confirmation */
+.sell-confirmation {
+    text-align: center;
+    padding: 60px 50px;
+}
+
+.sell-confirm-icon {
+    width: 64px;
+    height: 64px;
+    background: #2F6B4A;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    box-shadow: 0 8px 25px rgba(47,107,74,0.25);
+}
+
+.sell-confirm-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--graphite);
+    margin-bottom: 16px;
+}
+
+.sell-confirm-text {
+    font-size: 1rem;
+    color: #888;
+    line-height: 1.7;
+    margin-bottom: 32px;
+}
+
+.sell-confirm-cta {
+    display: inline-block;
+    padding: 13px 32px;
+    background: var(--graphite);
+    color: white;
+    border-radius: 2px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background 0.25s;
+}
+
+.sell-confirm-cta:hover {
+    background: var(--red);
+}
+
+/* Trust bar */
+.sell-trust {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 28px 20px;
+    background: var(--cream);
+    border-top: 1px solid #e8e0d5;
+    flex-wrap: wrap;
 }
 
 /* -----------------------------------------------------------

@@ -3,162 +3,330 @@
 
 <!-- ============================================================
      SELL YOUR VEHICLE PAGE
-     Allows users to submit a vehicle for sale via license plate
-     The plate number is sent to the /api/check_plate endpoint
-     which calls the external immat-api.fr service
+     Two-step form: plate lookup then additional details
+     API call is bypassed for demo — manual entry available
      ============================================================ -->
 
-<!-- Hero banner with page title and subtitle -->
-<section class="sell-hero">
-    <h1 class="sell-title">Vendez votre véhicule en toute simplicité</h1>
-    <p class="sell-subtitle">Expertise, transparence, estimation grâce à votre plaque.</p>
+<!-- Hero -->
+<section class="sell-hero-section">
+    <div class="sell-hero-content">
+        <p class="sell-hero-label">OTOMA — Reprise & Vente</p>
+        <h1 class="sell-hero-title">Vendez votre véhicule</h1>
+        <p class="sell-hero-sub">Une estimation rapide, un processus transparent, une équipe à votre écoute.</p>
+    </div>
 </section>
 
-<!-- Main form section -->
-<section class="sell-form-section">
-    <form id="sellForm" class="sell-form">
+<!-- How it works -->
+<section class="sell-process">
+    <div class="sell-process-inner">
+        <div class="sell-process-step">
+            <span class="sell-process-num">01</span>
+            <p class="sell-process-label">Renseignez votre plaque</p>
+        </div>
+        <div class="sell-process-line"></div>
+        <div class="sell-process-step">
+            <span class="sell-process-num">02</span>
+            <p class="sell-process-label">Complétez les informations</p>
+        </div>
+        <div class="sell-process-line"></div>
+        <div class="sell-process-step">
+            <span class="sell-process-num">03</span>
+            <p class="sell-process-label">Nous vous recontactons</p>
+        </div>
+    </div>
+</section>
 
-        <!-- Step 1 — License plate lookup -->
-        <label>Votre plaque d'immatriculation</label>
-        <input type="text" id="plate" placeholder="AB-123-CD" required>
-        <!-- Triggers the plate check API call — does not submit the form -->
-        <button type="button" id="checkPlateBtn" class="sell-btn">Rechercher</button>
+<!-- Main form -->
+<section class="sell-section">
 
-        <!-- Vehicle info container — hidden by default
-             Revealed after a successful plate lookup -->
-        <div id="vehicleInfo" style="display:none; margin-top:20px;">
+    <!-- STEP 1 — Plate input -->
+    <div id="step1" class="sell-card">
 
-            <!-- Vehicle details retrieved from the external API -->
-            <h3>Informations du véhicule</h3>
-            <p><strong>Marque :</strong> <span id="infoBrand"></span></p>
-            <p><strong>Modèle :</strong> <span id="infoModel"></span></p>
-            <p><strong>Année :</strong> <span id="infoYear"></span></p>
-            <p><strong>Carburant :</strong> <span id="infoFuel"></span></p>
-            <p><strong>Couleur :</strong> <span id="infoColor"></span></p>
-            <p><strong>Puissance :</strong> <span id="infoHP"></span> ch</p>
-            <p><strong>Transmission :</strong> <span id="infoTransmission"></span></p>
+        <div class="sell-card-header">
+            <div class="sell-header-line"></div>
+            <h2 class="sell-card-title">Votre plaque d'immatriculation</h2>
+            <div class="sell-header-line"></div>
+        </div>
 
-            <!-- Step 2 — Additional vehicle details filled in by the seller -->
-            <label>Kilométrage</label>
-            <input type="number" id="km" required>
+        <p class="sell-card-sub">
+            Saisissez votre numéro de plaque pour identifier votre véhicule automatiquement,
+            ou renseignez les informations manuellement.
+        </p>
 
-            <label>Prix souhaité (€)</label>
-            <input type="number" id="price" required>
+        <div class="sell-plate-wrap">
+            <!-- French plate styled input -->
+            <div class="sell-plate-input-wrap">
+                <div class="sell-plate-flag">🇫🇷</div>
+                <input
+                    type="text"
+                    id="plate"
+                    class="sell-plate-input"
+                    placeholder="AB-123-CD"
+                    maxlength="9"
+                    oninput="formatPlate(this)">
+            </div>
+            <button class="sell-plate-btn" onclick="checkPlate()">Identifier</button>
+        </div>
 
-            <!-- Optional vehicle photos upload -->
-            <label>Photos du véhicule</label>
-            <input type="file" id="images" multiple>
+        <p id="plate-error" class="sell-error" style="display:none;"></p>
+        <p id="plate-loading" class="sell-loading" style="display:none;">Recherche en cours...</p>
 
-            <!-- Step 3 — Seller personal information -->
-            <h3 style="margin-top:25px;">Vos coordonnées</h3>
+        <!-- Manual entry fallback -->
+        <div class="sell-manual-toggle">
+            <button class="sell-manual-btn" onclick="skipToStep2()">
+                Renseigner manuellement sans plaque
+            </button>
+        </div>
 
-            <label>Adresse e-mail</label>
-            <input type="email" id="email" required placeholder="exemple@mail.com">
+    </div>
 
-            <label>Numéro de téléphone</label>
-            <input type="tel" id="phone" required placeholder="06 12 34 56 78">
+    <!-- STEP 2 — Vehicle details -->
+    <div id="step2" class="sell-card" style="display:none;">
 
-            <!-- GDPR consent checkbox — mandatory before form submission -->
-            <div style="margin-top:15px;">
-                <label style="display:inline-flex; align-items:center; gap:10px; white-space:nowrap; cursor:pointer;">
-                    <input type="checkbox" id="consent" required style="width:18px; height:18px;">
-                    <span>J'accepte que OTOMA récupère et stocke mes données</span>
+        <div class="sell-card-header">
+            <div class="sell-header-line"></div>
+            <h2 class="sell-card-title">Informations du véhicule</h2>
+            <div class="sell-header-line"></div>
+        </div>
+
+        <p class="sell-card-sub">Vérifiez et complétez les informations de votre véhicule.</p>
+
+        <form id="sellForm" class="sell-form" onsubmit="return false;">
+
+            <!-- Vehicle info grid — auto-filled or manual -->
+            <div class="sell-vehicle-detected" id="vehicleDetected" style="display:none;">
+                <div class="sell-detected-badge">Véhicule identifié</div>
+                <div class="sell-detected-info">
+                    <span id="detected-name"></span>
+                    <span id="detected-year"></span>
+                </div>
+            </div>
+
+            <div class="sell-form-grid">
+                <div class="form-group">
+                    <label>Marque</label>
+                    <input type="text" id="brand" placeholder="Ex : Porsche" required>
+                </div>
+                <div class="form-group">
+                    <label>Modèle</label>
+                    <input type="text" id="model" placeholder="Ex : 911" required>
+                </div>
+                <div class="form-group">
+                    <label>Année</label>
+                    <input type="text" id="year" placeholder="Ex : 2020" required>
+                </div>
+                <div class="form-group">
+                    <label>Carburant</label>
+                    <input type="text" id="fuel" placeholder="Ex : Essence" required>
+                </div>
+                <div class="form-group">
+                    <label>Couleur</label>
+                    <input type="text" id="color" placeholder="Ex : Noir" required>
+                </div>
+                <div class="form-group">
+                    <label>Puissance (ch)</label>
+                    <input type="text" id="hp" placeholder="Ex : 450" required>
+                </div>
+                <div class="form-group">
+                    <label>Transmission</label>
+                    <input type="text" id="transmission" placeholder="Ex : Automatique" required>
+                </div>
+                <div class="form-group">
+                    <label>Kilométrage</label>
+                    <input type="number" id="km" placeholder="Ex : 35000" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Prix souhaité (€)</label>
+                <input type="number" id="price" placeholder="Ex : 85000" required>
+            </div>
+
+            <div class="sell-form-separator">Vos coordonnées</div>
+
+            <div class="sell-form-grid">
+                <div class="form-group">
+                    <label>Adresse e-mail</label>
+                    <input type="email" id="email" placeholder="jean.dupont@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Numéro de téléphone</label>
+                    <input type="tel" id="phone" placeholder="06 12 34 56 78" maxlength="14" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Photos du véhicule <span class="auth-hint">(facultatif)</span></label>
+                <input type="file" id="images" multiple accept="image/*" class="sell-file-input">
+            </div>
+
+            <div class="sell-consent">
+                <label>
+                    <input type="checkbox" id="consent" required>
+                    <span>J'accepte que OTOMA collecte et traite mes données dans le cadre de cette demande.</span>
                 </label>
             </div>
 
-            <!-- Form submission button -->
-            <button type="submit" class="sell-btn" style="margin-top:20px;">Envoyer la demande</button>
-        </div>
+            <p id="sell-error" class="sell-error" style="display:none;"></p>
 
-        <!-- Status message displayed below the form
-             Shows errors or success feedback to the user -->
-        <p id="sellMessage" class="sell-message"></p>
+            <div class="sell-form-actions">
+                <button type="button" class="sell-back-btn" onclick="backToStep1()">Retour</button>
+                <button type="button" class="sell-submit-btn" onclick="submitSell()">Envoyer ma demande</button>
+            </div>
 
-    </form>
+        </form>
+    </div>
+
+    <!-- STEP 3 — Confirmation -->
+    <div id="step3" class="sell-card sell-confirmation" style="display:none;">
+        <div class="sell-confirm-icon">✓</div>
+        <h2 class="sell-confirm-title">Demande envoyée</h2>
+        <p class="sell-confirm-text">
+            Votre demande a bien été reçue par notre équipe.<br>
+            Un conseiller OTOMA vous contactera sous 24h pour vous proposer une estimation.
+        </p>
+        <a href="{{ url_for('catalogue') }}" class="sell-confirm-cta">Retour au catalogue</a>
+    </div>
+
+</section>
+
+<!-- Trust bar -->
+<section class="sell-trust">
+    <div class="trust-item">
+        <span>Estimation sous 24h</span>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-item">
+        <span>Processus 100% transparent</span>
+    </div>
+    <div class="trust-divider"></div>
+    <div class="trust-item">
+        <span><a href="tel:0610203040">06 10 20 30 40</a></span>
+    </div>
 </section>
 
 <script>
 // ============================================================
-// DOM ELEMENT REFERENCES
+// PLATE FORMATTING
+// Auto-formats input as AA-123-BB
 // ============================================================
-const plateInput = document.getElementById("plate");
-const checkPlateBtn = document.getElementById("checkPlateBtn");
-const vehicleInfo = document.getElementById("vehicleInfo");
-const sellForm = document.getElementById("sellForm");
-
-// Span elements filled with data returned by the plate API
-const infoBrand = document.getElementById("infoBrand");
-const infoModel = document.getElementById("infoModel");
-const infoYear = document.getElementById("infoYear");
-const infoFuel = document.getElementById("infoFuel");
-const infoColor = document.getElementById("infoColor");
-const infoHP = document.getElementById("infoHP");
-const infoTransmission = document.getElementById("infoTransmission");
-
-// Status message element
-const sellMessage = document.getElementById("sellMessage");
+function formatPlate(input) {
+    let v = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (v.length > 2 && v.length <= 5) v = v.slice(0,2) + '-' + v.slice(2);
+    if (v.length > 5) v = v.slice(0,2) + '-' + v.slice(2,5) + '-' + v.slice(5,7);
+    input.value = v;
+}
 
 // ============================================================
-// LICENSE PLATE LOOKUP
-// Sends the plate number to the Flask /api/check_plate endpoint
-// which calls the external immat-api.fr service
-// On success, fills in the vehicle info and reveals the form
-// On failure, shows an error message
+// PLATE CHECK
+// Calls Flask API — falls back to manual if API fails or no credits
 // ============================================================
-checkPlateBtn.addEventListener("click", async () => {
-    // Clean the plate input by removing dashes and spaces
-    const plate = plateInput.value.trim().replace(/[-\s]/g, "");
+async function checkPlate() {
+    const plate = document.getElementById('plate').value.trim();
+    const errorEl   = document.getElementById('plate-error');
+    const loadingEl = document.getElementById('plate-loading');
 
     if (!plate) {
-        alert("Veuillez entrer une plaque valide.");
+        errorEl.textContent = "Veuillez saisir une plaque d'immatriculation.";
+        errorEl.style.display = 'block';
         return;
     }
 
-    sellMessage.textContent = "Recherche en cours...";
+    errorEl.style.display = 'none';
+    loadingEl.style.display = 'block';
 
     try {
-        // Call the Flask proxy endpoint which queries the external API
-        const res = await fetch(`/api/check_plate?plate=${plate}`);
-        if (!res.ok) throw new Error("Plaque non trouvée.");
+        const res  = await fetch(`/api/check_plate?plate=${encodeURIComponent(plate)}`);
         const data = await res.json();
+        loadingEl.style.display = 'none';
 
-        // Populate the vehicle info spans with API response data
-        // Falls back to "-" if a field is missing
-        infoBrand.textContent = data.brand || "-";
-        infoModel.textContent = data.model || "-";
-        infoYear.textContent = data.year || "-";
-        infoFuel.textContent = data.fuel || "-";
-        infoColor.textContent = data.color || "-";
-        infoHP.textContent = data.hp || "-";
-        infoTransmission.textContent = data.transmission || "-";
+        if (data.error || !data.brand) {
+            // API failed — go to manual mode
+            skipToStep2();
+            return;
+        }
 
-        // Reveal the vehicle info and additional form fields
-        vehicleInfo.style.display = "block";
-        sellMessage.textContent = "";
+        // Pre-fill the form with API data
+        document.getElementById('brand').value        = data.brand || '';
+        document.getElementById('model').value        = data.model || '';
+        document.getElementById('year').value         = data.year  || '';
+        document.getElementById('fuel').value         = data.fuel  || '';
+        document.getElementById('color').value        = data.color || '';
+        document.getElementById('hp').value           = data.hp    || '';
+        document.getElementById('transmission').value = data.transmission || '';
 
-    } catch (err) {
-        // Hide the vehicle info and show an error message
-        vehicleInfo.style.display = "none";
-        sellMessage.textContent = "Impossible de retrouver le véhicule. Vérifiez votre plaque.";
+        // Show detected vehicle badge
+        const detected = document.getElementById('vehicleDetected');
+        document.getElementById('detected-name').textContent = `${data.brand} ${data.model}`;
+        document.getElementById('detected-year').textContent = data.year || '';
+        detected.style.display = 'flex';
+
+        goToStep2();
+
+    } catch(e) {
+        loadingEl.style.display = 'none';
+        // Silent fail — go to manual entry
+        skipToStep2();
     }
+}
+
+// ============================================================
+// NAVIGATION BETWEEN STEPS
+// ============================================================
+function goToStep2() {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function skipToStep2() {
+    // Clear any pre-filled data
+    document.getElementById('vehicleDetected').style.display = 'none';
+    goToStep2();
+}
+
+function backToStep1() {
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step1').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// PHONE FORMATTING
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('phone')?.addEventListener('input', function() {
+        let v = this.value.replace(/\D/g, '').substring(0, 10);
+        this.value = v.match(/.{1,2}/g)?.join(' ') || v;
+    });
 });
 
 // ============================================================
-// FORM SUBMISSION HANDLER
-// Validates the GDPR consent checkbox before allowing submission
-// Shows a success message — real backend submission to be added later
+// FORM SUBMISSION
 // ============================================================
-sellForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+async function submitSell() {
+    const errorEl = document.getElementById('sell-error');
 
-    // Check GDPR consent
-    if (!document.getElementById("consent").checked) {
-        sellMessage.textContent = "Vous devez accepter que OTOMA stocke vos données.";
-        sellMessage.style.color = "red";
+    if (!document.getElementById('consent').checked) {
+        errorEl.textContent = "Veuillez accepter les conditions.";
+        errorEl.style.display = 'block';
         return;
     }
 
-    // Save request to MongoDB if user is logged in
+    const required = ['brand','model','year','fuel','color','hp','transmission','km','price','email','phone'];
+    for (let id of required) {
+        const el = document.getElementById(id);
+        if (el && !el.value.trim()) {
+            el.focus();
+            errorEl.textContent = "Veuillez remplir tous les champs obligatoires.";
+            errorEl.style.display = 'block';
+            return;
+        }
+    }
+
+    errorEl.style.display = 'none';
+
+    // Save to MongoDB if logged in
     try {
         await fetch('/api/save_request', {
             method: 'POST',
@@ -166,24 +334,25 @@ sellForm.addEventListener("submit", async (e) => {
             body: JSON.stringify({
                 type: 'vente',
                 details: {
-                    'Marque': document.getElementById('brand')?.value || infoBrand.textContent,
-                    'Modele': document.getElementById('model')?.value || infoModel.textContent,
-                    'Annee': document.getElementById('year')?.value || infoYear.textContent,
+                    'Marque':      document.getElementById('brand').value,
+                    'Modele':      document.getElementById('model').value,
+                    'Annee':       document.getElementById('year').value,
                     'Kilometrage': document.getElementById('km').value + ' km',
-                    'Prix souhaite': document.getElementById('price').value + ' €',
-                    'Email': document.getElementById('email').value,
-                    'Telephone': document.getElementById('phone').value,
+                    'Prix':        document.getElementById('price').value + ' €',
+                    'Email':       document.getElementById('email').value,
+                    'Telephone':   document.getElementById('phone').value,
                 }
             })
         });
     } catch(e) {
-        console.log('Request not saved:', e);
+        console.log('Not saved:', e);
     }
 
-    // Show success message
-    sellMessage.style.color = "green";
-    sellMessage.textContent = "Demande envoyée ! Nous vous contacterons rapidement.";
-});
+    // Show confirmation
+    document.getElementById('step2').style.display = 'none';
+    document.getElementById('step3').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 </script>
 
 {% endblock %}
