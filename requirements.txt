@@ -5,5 +5,5 @@ python-dotenv
 pymongo
 bcrypt
 flask-login
-
+supabase
 
