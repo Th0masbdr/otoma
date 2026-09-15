@@ -27,10 +27,10 @@ def add_security_headers(response):
         "default-src 'self'; "
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com; "
-        "script-src 'self' 'unsafe-inline' https://tally.so; "
-        "frame-src https://tally.so; "
-        "img-src 'self' data: https://agfrpgvtquqpgnqshskn.supabase.co; "
-        "connect-src 'self';"
+        "script-src 'self' 'unsafe-inline' https://tally.so https://maps.googleapis.com; "
+        "frame-src https://tally.so https://www.google.com; "
+        "img-src 'self' data: https://agfrpgvtquqpgnqshskn.supabase.co https://maps.gstatic.com https://maps.googleapis.com; "
+        "connect-src 'self' https://maps.googleapis.com;"
     )
     return response
 
