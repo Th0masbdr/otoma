@@ -50,7 +50,7 @@
             {% for car in fav_cars %}
             <div class="car-card" onclick="window.location.href='/car/{{ car.id }}'">
                 <div class="car-img">
-                    <img src="/static/{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
+                    <img src="{{ storage_url }}{{ car.image }}" alt="{{ car.brand }} {{ car.model }}" loading="lazy">
                     <span class="car-type-badge" style="background:
                         {% if car.type == 'SUV' %}#2F6B4A
                         {% elif car.type == 'Sportive' %}#A63A3A

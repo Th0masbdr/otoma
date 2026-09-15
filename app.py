@@ -379,7 +379,8 @@ def compte():
     return render_template("compte.html",
         user=current_user(),
         fav_cars=fav_cars,
-        demandes=demandes
+        demandes=demandes,
+        storage_url=STORAGE_URL
     )
 
 # ============================================================
